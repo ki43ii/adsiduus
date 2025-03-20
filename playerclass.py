@@ -14,9 +14,9 @@ class Enemy:
             
             self.attack_strength = randint(10, 50)
             self.defense = randint(10, 50)
-            self.health = randint(25, 120)
+            self.health = randint(40, 120)
 
-        elif enemypower == 1:
+        if enemypower == 1:
 
             self.attack_strength = randint(25, 65)
             self.defense = randint(25, 65)
@@ -36,9 +36,10 @@ class Enemy:
 
     def identify_type(self):  # this method identifies the enemy's type.
         
-        stats_mean = self.attack_strength + self.defense + (self.health / 4)) // 3  # mean of stats
+        stats_mean = self.attack_strength + self.defense + (self.health / 4) // 3  # mean of stats
         
-        relative_power = "weak" if stats_mean % 10 < 5 else relative_power = "powerful"
+        if stats_mean % 10 < 5: relative_power = "weak"
+        else: relative_power = "powerful"
 
         return relative_power + enemytypes.get(round(stats_mean), -1)  # Rounded to tens place, put into dict at top.
 
