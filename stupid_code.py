@@ -1,2 +1,1 @@
-for i in range(6):
-  pass
+print("fredcaine is weird")
