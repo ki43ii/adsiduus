@@ -2,18 +2,26 @@ from ast import literal_eval
 from random import randint
 
 savefile = open("savefile.txt", "r")
-previous_save = (savefile.read())
+previous_save = savefile.read()
 previous_save = literal_eval(previous_save)
+
+savefile = open("savefile.txt", "w")
 
 # (Attack, Defense)
 stats = {"barbarian" : (50, 50, 200, "rip"), "tank" : (20, 80, 400, "invincible"),
-         "healer" : (30, 30, 300, "revive"), "warrior" : (80, 20, 150, "enrage")}
+         "healer" : (30, 30, 300, "heal"), "warrior" : (80, 20, 150, "enrage")}
 
 weapons = {"barbarian" : ("short-range knife", "hatchet", "rope", "mace",
                           "axe", "whip", "throwable axe", "scythe", "javelin"),
 
            "tank" : ("hands", "bow and arrow", "slab of iron", "crossbow", "shield",
-                     "spiked shield", "titanium knuckles", "pistol", "a literal sniper rifle (lol)")}
+                     "spiked shield", "titanium knuckles", "pistol", "a literal sniper rifle (lol)"),
+
+           "healer" : ("safety scissors", "stethoscope", "reflex hammer", "cutting knife", "razer",
+                       "textbook of Dermatology", "lancet (tests blood sugar)", "thermometer", "obsidian scalpel"),
+
+           "warrior" : ("hands", "shortsword", "bow and arrow", "katana", "spiked shield",
+                        "spinny spiky spoon", "crossbow", "dual-wield katana", "pistol")}
 
 enemytypes = {10: "dog", 20: "wolf", 30: "guard", 40: "armed guard", 50: "lead guard",
               60: "wizard", 70: "enraged wizard", 80: "high wizard", 90: "grand sorcerer",
@@ -61,11 +69,19 @@ class Player:
     def __init__(self, playertype):
 
         self.level = current_level
+        self.xp = current_xp
         # dividing by 5 to avoid overpowering level 9 players
         self.attack_strength = stats.get(playertype)[0] * self.level // 5  
         self.defense = stats.get(playertype)[1] * self.level // 5
         self.health = stats.get(playertype)[2] * self.level // 5
         self.special_move = stats.get(playertype)[3] * self.level // 5
+
+    def levelup(self):
+
+        self.xp = 0
+        self.level += 1
+
+        savefile.write(f"\{\"level\" : {self.level}, \"xp\" : {self.xp}}")
 
     def attack(self, enemy):
         
