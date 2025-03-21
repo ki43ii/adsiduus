@@ -77,7 +77,7 @@ class Player:
         self.health = stats.get(playertype)[2] * self.level // 5
         self.special_move = stats.get(playertype)[3]
         print(f"Congratulations on beginning your adventure as a {playertype}.")
-        print(f"You will begin your journey as a level 1 with your trusty {weapons.get(playertype)[level - 1]}")
+        print(f"You will begin your journey as a level 1 with your trusty {weapons.get(playertype)[self.level - 1]}.")
 
     def levelup(self):
 
