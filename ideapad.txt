@@ -1,0 +1,63 @@
+REQUIRED ASCII ART!!
+
+BARBARIAN (levels 0-4), BARBARIAN (levels 5-9)
+WARRIOR (levels 0-4), WARRIOR (levels 5-9)
+TANK (levels 0-4), TANK (levels 5-9)
+HEALER (levels 0-4), HEALER (5-9)
+
+FOR EACH OF THE FOLLOWING, A WEAK AND POWERFUL VERSION IS REQUIRED
+dog
+wolf
+unarmed guard
+armed guard
+lead guard
+wizard
+enraged wizard
+high wizard
+grand sorcerer
+tarrasque
+
+WEAPONS
+
+short-range
+knife
+hatchet
+rope
+mace
+axe
+whip
+throwable axe
+scythe
+javelin
+
+hands
+bow and arrow
+slab of iron
+crossbow
+shield
+spiked shield
+titanium knuckles
+pistol
+a literal sniper rifle (lol)
+
+safety scissors
+stethoscope
+reflex hammer
+cutting knife
+razer
+textbook of Dermatology
+lancet (tests blood sugar)
+thermometer
+obsidian scalpel
+
+hands
+short-sword
+bow and arrow
+katana
+spiked shield
+spinny spiky spoon
+crossbow
+dual-wield katana
+pistol
+
+MAKE AS MANY BACKGROUNDS (inside rooms) AS YOU CAN. WE WILL COME UP WITH ROOM IDEAS LATER.
