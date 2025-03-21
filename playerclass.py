@@ -75,7 +75,9 @@ class Player:
         self.attack_strength = stats.get(playertype)[0] * self.level // 5  
         self.defense = stats.get(playertype)[1] * self.level // 5
         self.health = stats.get(playertype)[2] * self.level // 5
-        self.special_move = stats.get(playertype)[3] * self.level // 5
+        self.special_move = stats.get(playertype)[3]
+        print(f"Congratulations on beginning your adventure as a {playertype}.")
+        print(f"You will begin your journey as a level 1 with your trusty {weapons.get(playertype)[level - 1]}")
 
     def levelup(self):
 
@@ -84,6 +86,10 @@ class Player:
 
         savefile = open("savefile.txt", "w")
         savefile.write("{'level' : " + self.level + ", 'xp' : " + self.xp + "}")
+
+        self.attack_strength = stats.get(playertype)[0] * self.level // 5
+        self.defense = stats.get(playertype)[1] * self.level // 5
+        self.health = stats.get(playertype)[2] * self.level // 5
 
     def attack(self, enemy):
         
