@@ -1,10 +1,16 @@
 from random import randint
 
+#(Attack, Defense)
 stats = {"barbarian" : (50, 50), "tank" : (20, 80), "healer" : (30, 30), "warrior" : (80, 20)}
 
 enemytypes = {10: "dog", 20: "wolf", 30: "guard", 40: "armed guard", 50: "lead guard",
               60: "wizard", 70: "enraged wizard", 80: "high wizard", 90: "grand sorcerer",
               100: "tarrasque"}
+
+barbarian = stats["barbarian"]
+tank = stats["tank"]
+healer = stats["healer"]
+warrior = stats["warrior"]
 
 class Enemy:
 
@@ -12,26 +18,26 @@ class Enemy:
 
         if enemypower == 0:
             
-            self.attack_strength = randint(10, 50)
-            self.defense = randint(10, 50)
+            self.attack_strength = randint(10, barbarian[0])
+            self.defense = randint(10, barbarian[1])
             self.health = randint(40, 120)
 
         if enemypower == 1:
 
-            self.attack_strength = randint(25, 65)
-            self.defense = randint(25, 65)
+            self.attack_strength = randint(25, tank[0])
+            self.defense = randint(25, tank[1])
             self.health = randint(60, 180)
 
         elif enemypower == 2:
             
-            self.attack_strength = randint(40, 80)
-            self.defense = randint(40, 80)
+            self.attack_strength = randint(40, healer[0])
+            self.defense = randint(40, healer[1])
             self.health = randint(120, 250)
 
         else:
 
-            self.attack_strength = randint(60, 120)
-            self.defense = randint(60, 120)
+            self.attack_strength = randint(60, warrior[0])
+            self.defense = randint(60, warrior[1])
             self.health = randint(150, 300)
 
     def identify_type(self):  # this method identifies the enemy's type.
