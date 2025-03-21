@@ -5,6 +5,9 @@ savefile = open("savefile.txt", "r")
 previous_save = savefile.read()
 previous_save = literal_eval(previous_save)
 
+current_level = previous_save.get("level")
+current_xp = previous_save.get("xp")
+
 savefile = open("savefile.txt", "w")
 
 # (Attack, Defense)
