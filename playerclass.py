@@ -1,4 +1,11 @@
+from ast import literal_eval
 from random import randint
+
+savefile = open("savefile.txt", "r")
+previous_save = (savefile.read())
+previous_save = literal_eval(previous_save)
+
+print(previous_save.get("level"))
 
 # (Attack, Defense)
 stats = {"barbarian" : (50, 50, 200, "rip"), "tank" : (20, 80, 400, "invincible"),
@@ -32,13 +39,13 @@ class Enemy:
 
         elif enemypower == 2:
             
-            self.attack_strength = randint(40, 80])
+            self.attack_strength = randint(40, 80)
             self.defense = randint(40, 80)
             self.health = randint(120, 250)
 
         else:
 
-            self.attack_strength = randint(60, 120])
+            self.attack_strength = randint(60, 120)
             self.defense = randint(60, 120)
             self.health = randint(150, 300)
 
@@ -55,7 +62,7 @@ class Player:
 
     def __init__(self, playertype):
 
-        self.level = 1
+        self.level = current_level
         # dividing by 5 to avoid overpowering level 9 players
         self.attack_strength = stats.get(playertype)[0] * self.level // 5  
         self.defense = stats.get(playertype)[1] * self.level // 5
