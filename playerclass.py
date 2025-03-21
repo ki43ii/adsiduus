@@ -8,8 +8,6 @@ previous_save = literal_eval(previous_save)
 current_level = previous_save.get("level")
 current_xp = previous_save.get("xp")
 
-savefile = open("savefile.txt", "w")
-
 # (Attack, Defense)
 stats = {"barbarian" : (50, 50, 200, "rip"), "tank" : (20, 80, 400, "invincible"),
          "healer" : (30, 30, 300, "heal"), "warrior" : (80, 20, 150, "enrage")}
@@ -84,7 +82,8 @@ class Player:
         self.xp = 0
         self.level += 1
 
-        savefile.write(f"\{\"level\" : {self.level}, \"xp\" : {self.xp}}")
+        savefile = open("savefile.txt", "w")
+        savefile.write("{'level' : " + self.level + ", 'xp' : " + self.xp + "}")
 
     def attack(self, enemy):
         
