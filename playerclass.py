@@ -5,8 +5,6 @@ savefile = open("savefile.txt", "r")
 previous_save = (savefile.read())
 previous_save = literal_eval(previous_save)
 
-print(previous_save.get("level"))
-
 # (Attack, Defense)
 stats = {"barbarian" : (50, 50, 200, "rip"), "tank" : (20, 80, 400, "invincible"),
          "healer" : (30, 30, 300, "revive"), "warrior" : (80, 20, 150, "enrage")}
