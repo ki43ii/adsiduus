@@ -9,7 +9,11 @@ playertype = input("""You will soon embark on your journey, fighting the horribl
                    b) Tank
                    c) Healer
                    d) Warrior
-                Choose wisely, as your choice determines your strength, and the weapons that you will be using.\n\n""")
+                Choose wisely, as your choice determines your strength, and the weapons that you will be using.\n\n""").lower()
 
-player = Player({"a": "barbarian", "b": "tank", "c": "healer", "d": "warrior"}.get(playertype))
-
+while True:
+    try:
+        player = Player({"a": "barbarian", "b": "tank", "c": "healer", "d": "warrior"}.get(playertype))
+        break
+    except TypeError:
+        playertype = input("\nHe tells you to just use the letter alone. Don't include brackets or anything.\n\n")
