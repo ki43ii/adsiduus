@@ -1,6 +1,13 @@
 from playerclass import Enemy, Player
 from collections import Counter
 
+def a_an(string):
+    vowels = ["a", "e", "i", "o", "u"]
+    if string[0] in vowels:
+        return "an"
+    else:
+        return "a"
+
 # this will be useful in the allattack method
 def format_enemyarray(arr):
     enemy_counts = Counter(arr)  # Count occurrences of each number
@@ -9,16 +16,20 @@ def format_enemyarray(arr):
     formatted_result = []
     for enemy, count in sorted_enemy_counts:
         if count == 1:
-            formatted_result.append(f"a {enemy}")
-        elif 
+            formatted_result.append(f"{a_an(enemy)} {enemy}")
+
+        elif count == sorted_enemy_counts[-1] and count == 1:
+            formatted_result.append(f"and {a_an(enemy)} {enemy}")
+        elif count == sorted_enemy_counts[-1]:
+            formatted_result.append("and {number_encoding.get(count)} {enemy}s")
+
         else:
             formatted_result.append(f"{number_encoding.get(count)} {enemy}s")
     
     return formatted_result
 
-number_encoding = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven", 8: "eight", 9: "nine", 10: "ten", 11: "eleven", 12: "twelve",
+number_encoding = {2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven", 8: "eight", 9: "nine", 10: "ten", 11: "eleven", 12: "twelve",
                    13: "thirteen", 14: "fourteen", 15: "fifteen", 16: "sixteen", 17: "seventeen", 18: "eighteen", 19: "nineteen", 20: "twenty"}
-player = Player("barbarian")
 
 class DungeonRoom:
 
@@ -68,7 +79,3 @@ class DungeonRoom:
         print(f"""Lucky you! You have managed to dodge {totaldamagemissed} hit points worth of damage from {missenemiesstr}.""")
         if totaldamagehit > 0:
             print(f"""However, you were unable to avoid {totaldamagehit} hit points worth of damage from {hitenemiesstr}.""")
-
-dungeon = DungeonRoom(20)
-
-dungeon.allattack_player(player)

@@ -112,7 +112,7 @@ class Player:
         self.special_move = stats.get(playertype)[3]
         print(f"Congratulations on beginning your adventure as a {playertype}.")
         print(f"You will begin your journey as a level 1 with your trusty {weapons.get(playertype)[self.level - 1]}.")
-        print(f"You are granted an incredible power! You are blessed with the special move {self.special_move}.")
+        print(f"You are granted an incredible power; your special move is {self.special_move}.")
 
     def levelup(self):
 
