@@ -1,5 +1,6 @@
 from playerclass import Player, Enemy
 from roomdefinitions import DungeonRoom
+from sprites import sprites
 
 playertype = input("""You will soon embark on your journey, fighting the horrible Glitch.
             A kind wizard appears next to you. He asks what class you would like to play.
@@ -17,3 +18,8 @@ while True:
         break
     except TypeError:
         playertype = input("\nHe tells you to just use the letter alone. Don't include brackets or anything.\n\n")
+
+
+room1 = DungeonRoom(20, 1)
+room1.allattack_player(player)
+

@@ -39,10 +39,10 @@ class Enemy:
 
         elif enemypower == 10:  # 10 encodes a trivial enemy that can be beaten almost instantly
 
-            self.attack_strength = randint(50, 100)
-            self.defense = randint(50, 100)
-            self.health = randint(120, 250)
-            self.hit_chance = 5
+            self.attack_strength = randint(5, 30)
+            self.defense = randint(15, 30)
+            self.health = randint(15, 30)
+            self.hit_chance = 10
 
         else:
 
@@ -62,7 +62,7 @@ class Enemy:
 
     def attack(self, target, attackmode = None):
 
-        possible_damage = self.attack_strength * (50 // target.defense)  # roughly 50 is average defense stat
+        possible_damage = self.attack_strength * 50 // target.defense # roughly 50 is average defense stat
         
         if randint(0, 100) <= self.hit_chance:
 
@@ -106,9 +106,9 @@ class Player:
         self.level = current_level
         self.xp = current_xp
         # dividing by 5 to avoid overpowering level 9 players
-        self.attack_strength = stats.get(playertype)[0] * self.level // 5  
-        self.defense = stats.get(playertype)[1] * self.level // 5
-        self.health = stats.get(playertype)[2] * self.level // 5
+        self.attack_strength = stats.get(playertype)[0] * self.level // 2  
+        self.defense = stats.get(playertype)[1] // 2 + stats.get(playertype)[1] * self.level // 5
+        self.health = stats.get(playertype)[2] // 2 + stats.get(playertype)[2] * self.level // 5
         self.special_move = stats.get(playertype)[3]
         print(f"Congratulations on beginning your adventure as a {playertype}.")
         print(f"You will begin your journey as a level 1 with your trusty {weapons.get(playertype)[self.level - 1]}.")
@@ -123,8 +123,8 @@ class Player:
         savefile.write("{'level' : " + self.level + ", 'xp' : " + self.xp + "}")
 
         self.attack_strength = stats.get(playertype)[0] * self.level // 5
-        self.defense = stats.get(playertype)[1] * self.level // 5
-        self.health = stats.get(playertype)[2] * self.level // 5
+        self.defense = stats.get(playertype)[1] // 2 + stats.get(playertype)[1] * self.level // 5
+        self.health = stats.get(playertype)[2] // 2 + stats.get(playertype)[2] * self.level // 5
 
     def attack(self, enemy):
         

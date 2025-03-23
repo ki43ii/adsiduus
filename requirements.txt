@@ -1,1 +1,6 @@
+<<<<<<< HEAD
 # empty for now
+=======
+numpy
+pillow
+>>>>>>> 61c0a2d8d45e2ff751578e7f9ed2c2a50b24d42d
