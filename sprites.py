@@ -15,7 +15,7 @@ def convertToAscii(image_path, new_width=80):
 
     for row in pixels:
         for r, g, b in row:
-                brightness = int((int(r) + int(g) + int(b)) / 3)
+                brightness = (int(r) + int(g) + int(b)) / 3
                 char = ASCII_CHARS[brightness // 32]
                 ascii_str += f"\033[38;2;{r};{g};{b}m{char}"
         ascii_str += "\033[0m\n"
