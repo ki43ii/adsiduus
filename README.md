@@ -1,5 +1,6 @@
 cool hackathon game
 
+<pre>
 @@@
  @@@@@@                                                           
   @@@---@                                                    @@@@@
