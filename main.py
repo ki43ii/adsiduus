@@ -19,6 +19,19 @@ while True:
     except TypeError:
         playertype = input("\nHe tells you to just use the letter alone. Don't include brackets or anything.\n\n")
 
+def stdmvmt():
+    mvmtdecision = input("""How would you like to move?
+
+                         a) Up.
+                         b) Down.
+                         c) Left.
+                         d) Right.""").lower()
+    while True:
+        try:
+            mvmtdecision = {"a": "up", "b": "down", "c": "left", "d": "right"}.get(mvmtdecision)
+            break
+        except TypeError:
+            mvmtdecision = input("\nJust use the letter alone. Don't include brackets or anything.\n\n")
 
 room1 = DungeonRoom(20, 1)
 room1.allattack_player(player)
