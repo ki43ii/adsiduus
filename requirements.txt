@@ -1,4 +1,2 @@
 numpy
 pillow
-
-check if coding on this on chromebook is possible
