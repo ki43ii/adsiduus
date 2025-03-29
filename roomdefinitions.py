@@ -1,5 +1,7 @@
 from playerclass import Enemy, Player
 from collections import Counter
+from random import choice
+
 # this will be useful in the allattack method
 def format_enemyarray(arr):
     enemy_counts = Counter(arr)
@@ -84,3 +86,40 @@ class DungeonRoom:
             print(f"""However, you were unable to avoid {totaldamagehit} hit points worth of damage from {hitenemiesstr}.
 
             You are left with {player.health} hit points after the attack.""")
+
+    def allattack_eachother(self):
+
+        pass
+
+    def loot_dungeon(self):
+
+        pass
+
+class TripleDoorRoom:
+
+    def __init__(self, difficulty):  # this should be given as a number 1-2
+
+        self.difficulty = difficulty
+
+        roomchoice = input("""You stumble into a room with three doors. One door leads to you escaping completely unscathed. The other doors lead to traps; you don't yet know what they are, but you don't want to find out. You enter one of the following options on a piece of paper. Choose wisely.
+
+        a) Go through door A.
+        b) Go through door B.
+        c) Go through door C.\n\n""")
+
+        while True:
+            
+            if roomchoice not in ["a", "b", "c"]:
+
+                roomchoice = input("You enter your choice, but the paper comes right back. A message in blood is written on the wall: \"Just enter the letter. Nothing else\".\n\n")
+
+            else:
+                break
+
+        self.choice = choice(["strongenemy", "fakefreedom", "freedom"])
+
+    def strongenemy(self, difficulty, player):
+
+        enemy = Enemy(difficulty)
+
+room = TripleDoorRoom(1)
