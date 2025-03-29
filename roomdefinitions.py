@@ -121,5 +121,3 @@ class TripleDoorRoom:
     def strongenemy(self, difficulty, player):
 
         enemy = Enemy(difficulty)
-
-room = TripleDoorRoom(1)
