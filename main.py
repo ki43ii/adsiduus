@@ -1,5 +1,5 @@
-from playerclass import Player, Enemy
-from roomdefinitions import DungeonRoom
+from playerclass import *
+from roomdefinitions import *
 from sprites import sprites
 
 playertype = input("""You will soon embark on your journey, fighting the horrible Glitch.
@@ -32,7 +32,4 @@ def stdmvmt():
             break
         except TypeError:
             mvmtdecision = input("\nJust use the letter alone. Don't include brackets or anything.\n\n")
-
-room1 = DungeonRoom(20, 1)
-room1.allattack_player(player)
 

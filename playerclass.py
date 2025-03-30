@@ -16,6 +16,7 @@ class Enemy:
 
     def __init__(self, enemypower: int):  # here we define the enemy's stats based on its power
 
+        self.enemypower = enemypower
         if enemypower == 0:
             
             self.attack_strength = randint(10, 50)
@@ -72,19 +73,29 @@ class Enemy:
             else:
                 target.health -= possible_damage
 
-                print(f"""You have been hit by a {self.identify_type()}. It dealt {str(possible_damage)} damage to you.
+                print(f"""You have been hit by the {self.identify_type()}. It dealt {str(possible_damage)} damage to you.
                   You are left with {target.health} hit points.""")
         
         else:
             if attackmode == "dungeon":
                 return (self.identify_type(), possible_damage, 0)
             else:
-                print(f"""Lucky you! A {self.identify_type()} has missed its attack on you.
+                print(f"""Lucky you! The {self.identify_type()} has missed its attack on you.
                 You would have taken {possible_damage} hit points of damage.""")
 
+    def dead_byplayer(self, player):
+
+        print(f"You have taken out the {self.identify_type()} with {player.health} hit points remaining.")
+
+        if self.enemypower < 5: player.xp += self.enemypower
+        elif self.enemypower < 50: player.xp += self.enemypower // 10
+        else: player.xp += self.enemypower // 100
+
+        player.levelup()
+
 # player attack and defense stats based on class
-stats = {"barbarian" : (50, 50, 200, "rip"), "tank" : (20, 80, 400, "invincible"),
-         "healer" : (30, 30, 300, "heal"), "warrior" : (80, 20, 150, "enrage")}
+stats = {"barbarian" : (100, 50, 200, "rip"), "tank" : (40, 80, 400, "invincible"),
+         "healer" : (60, 30, 300, "heal"), "warrior" : (150, 20, 150, "enrage")}
 
 # weapon for each level for each player class
 weapons = {"barbarian" : ("short-range knife", "hatchet", "rope", "mace",
@@ -109,6 +120,7 @@ class Player:
         self.attack_strength = stats.get(playertype)[0] * self.level // 2  
         self.defense = stats.get(playertype)[1] // 2 + stats.get(playertype)[1] * self.level // 5
         self.health = stats.get(playertype)[2] // 2 + stats.get(playertype)[2] * self.level // 5
+        self.hit_chance = 60 + stats.get(playertype)[0] * self.level // 40
         self.special_move = stats.get(playertype)[3]
         print(f"Congratulations on beginning your adventure as a {playertype}.")
         print(f"You will begin your journey as a level 1 with your trusty {weapons.get(playertype)[self.level - 1]}.")
@@ -116,16 +128,34 @@ class Player:
 
     def levelup(self):
 
-        self.xp = 0
-        self.level += 1
+        if self.xp >= 50:
+            self.xp -= 50
+            self.level += 1
 
-        savefile = open("savefile.txt", "w")
-        savefile.write("{'level' : " + self.level + ", 'xp' : " + self.xp + "}")
+            savefile = open("savefile.txt", "w")
+            savefile.write("{'level' : " + self.level + ", 'xp' : " + self.xp + "}")
 
-        self.attack_strength = stats.get(playertype)[0] * self.level // 5
-        self.defense = stats.get(playertype)[1] // 2 + stats.get(playertype)[1] * self.level // 5
-        self.health = stats.get(playertype)[2] // 2 + stats.get(playertype)[2] * self.level // 5
+            self.attack_strength = stats.get(playertype)[0] * self.level // 5
+            self.defense = stats.get(playertype)[1] // 2 + stats.get(playertype)[1] * self.level // 5
+            self.health = stats.get(playertype)[2] // 2 + stats.get(playertype)[2] * self.level // 5
 
-    def attack(self, enemy):
+            self.weapon = weapons.get(playertype)[self.level - 1]  # as levels are 1-indexed
+
+            print(f"""Congratulations! You have leveled up. You are now level {self.level}. Your weapon has also been upgraded to a {self.weapon}.
+                  You now deal a little bit more damage to enemies, and you can defend more attacks.
+
+                  Remember, at any time, typing stats will give a list of your stats.\n\n""")
+
+    def attack(self, target):
         
+        possible_damage = self.attack_strength * 50 // target.defense # roughly 50 is average defense stat
+
+        if randint(0, 100) <= self.hit_chance:
+            
+            target.health -= possible_damage
+
+            print(f"""You attack the {target.identify_type()}. You have dealt {str(possible_damage)} damage to it.
+                  It is left with {target.health} hit points.""")
+
+    def dead(self):
         pass
