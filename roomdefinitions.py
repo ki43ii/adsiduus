@@ -144,17 +144,16 @@ class CheeseRoom:
 
 		    print("The creature has fallen while you are still unable to make out what it is")
 	
-        	elif decision == "b":
-	    
-		    print("The creature catches up to you, ripping you slowly to bits with its sharp and jagged nails.")
+         	elif decision == "b":
+                  print("The creature catches up to you, ripping you slowly to bits with its sharp and jagged nails.")
 
-		elif decision == "c":
+         elif decision == "c":
 	   
-		    print("Are you retarded")
+		                print("Are you retarded")
 
-		elif decision not in ["a","b","c"] or currentTime - timeAfter > 2:
+		       elif decision not in ["a","b","c"] or currentTime - timeAfter > 2:
 
-		    print("Due to your inability to make decisions, the creature grabs onto you, ripping you apart while deriding your scream and cries for help");
+		                print("Due to your inability to make decisions, the creature grabs onto you, ripping you apart while deriding your scream and cries for help");
 	
-		if decision != "a":
-	   	    exit()
+		       if decision != "a":
+	   	             exit()
