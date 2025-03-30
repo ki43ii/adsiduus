@@ -1,6 +1,7 @@
 from playerclass import Enemy, Player
 from collections import Counter
 from random import choice
+import time
 
 # this will be useful in the allattack method
 def format_enemyarray(arr):
@@ -121,3 +122,39 @@ class TripleDoorRoom:
     def strongenemy(self, difficulty, player):
 
         enemy = Enemy(difficulty)
+
+class CheeseRoom:
+
+	def __init__(self, difficulty):
+
+		self.difficulty = difficulty
+
+		print("You find yourself face to face with a broken yellow door and a gun on the floor. You try to look through but its completely dark, you look down and see what seems to be a rolled up letter, you bend over to pick it up...")
+		time.sleep(2)
+		
+		currentTime = time.time()
+		decision = input("""Until BANG, something explodes and you dont know what, you can barely see, until you look up and see a tall figure henched over about to attack you!
+			a) Shoot at it
+			b) Run away
+			c) Run at it
+		""")
+		timeAfter = time.time()
+
+	        if decision == "a":
+
+		    print("The creature has fallen while you are still unable to make out what it is")
+	
+        	elif decision == "b":
+	    
+		    print("The creature catches up to you, ripping you slowly to bits with its sharp and jagged nails.")
+
+		elif decision == "c":
+	   
+		    print("Are you retarded")
+
+		elif decision not in ["a","b","c"] or currentTime - timeAfter > 2:
+
+		    print("Due to your inability to make decisions, the creature grabs onto you, ripping you apart while deriding your scream and cries for help");
+	
+		if decision != "a":
+	   	    exit()
