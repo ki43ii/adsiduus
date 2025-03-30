@@ -1,7 +1,12 @@
 from playerclass import Enemy, Player
 from collections import Counter
+<<<<<<< HEAD
 from random import choice, randint
 from time import sleep
+=======
+from random import choice
+import time
+>>>>>>> 521dafc03559f13585192f09268c508df185dd62
 
 # this will be useful in the allattack method
 def format_enemyarray(arr):
@@ -129,6 +134,7 @@ class TripleDoorRoom:
     def strongenemy(self, difficulty, player):
 
         enemy = Enemy(difficulty)
+<<<<<<< HEAD
         print(f"You find yourself stuck in a room. Your only companion? A -- clearly furious -- {enemy.identify_type()}.")
 
         while True:
@@ -185,3 +191,52 @@ class TripleDoorRoom:
         sleep(1)
 
         print("You leave the room completely unscathed. You were lucky this time.")
+
+class CheeseRoom:
+
+	def __init__(self, difficulty):  # difficulty is 1, 2 or 3
+
+		self.difficulty = difficulty
+        self.enemy = Enemy(difficulty)
+
+		print("You find yourself face to face with a broken yellow door and a gun on the floor. You try to look through but its completely dark, you look down and see what seems to be a rolled up letter, you bend over to pick it up...")
+		
+        sleep(2)
+
+        before_time = time()                                                                                        
+        decision = input("""But -- BANG, something explodes and you don't know what. Your vision is blurred; you look up and barely make out a tall figure henched over, ready to attack you.
+
+                a) Shoot at it
+                b) Run away.                                                                                                            c) Run at it.""")
+
+            while True:
+
+                if time() - before_time > 20:
+
+                    print("Due to your inability to make decisions, the creature grabs onto you, ripping you apart while deriding your scream and cries for help")
+
+                elif decision == "a":
+
+		            print("The creature falls, though you are still unable to make out what it is.")
+                    enemy.dead_byplayer(player)
+                    break
+
+         	    elif decision == "b":
+                
+                    print(f"The {enemy.identify_type()} catches up to you, ripping you slowly to bits with its sharp and jagged nails.")
+                    enemy.attack(player)
+
+                    attackdec = input(f"""Would you like to attack it back?
+
+                                      a) Yes.
+                                      b) No.\n\n""")
+
+                    if attackdec == "a":
+                        player.attack(enemy)
+                    else:
+                        print("Strange choice, but alright.")
+
+                elif decision == "c":
+	   
+		            print("That was not the smartest of ideas.")
+                    enemy.attack(player)
