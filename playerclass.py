@@ -87,9 +87,12 @@ class Enemy:
 
         print(f"You have taken out the {self.identify_type()} with {player.health} hit points remaining.")
 
-        if self.enemypower < 5: player.xp += self.enemypower
-        elif self.enemypower < 50: player.xp += self.enemypower // 10
-        else: player.xp += self.enemypower // 100
+        if self.enemypower < 5: xpgained = self.enemypower
+        elif self.enemypower < 50: xpgained = self.enemypower // 10
+        else: xpgained = self.enemypower // 100
+
+        player.xp += xpgained
+        print(f"You gain {xpgained} xp.")
 
         player.levelup()
 

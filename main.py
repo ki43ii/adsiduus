@@ -32,4 +32,5 @@ def stdmvmt():
             break
         except TypeError:
             mvmtdecision = input("\nJust use the letter alone. Don't include brackets or anything.\n\n")
+room1 = CheeseRoom(3, player)
 
