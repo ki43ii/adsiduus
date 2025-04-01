@@ -3,33 +3,88 @@ from collections import Counter
 from random import choice, randint
 from time import *
 
-
-# this will be useful in the allattack method
-def format_enemyarray(arr):
-    enemy_counts = Counter(arr)
-    sorted_enemy_counts = sorted(enemy_counts.items(), key=lambda item: item[1], reverse=True)  # sorts by count descending
-    
-    formatted_result = []
-    for enemy, count in sorted_enemy_counts:
-        if enemy == sorted_enemy_counts[-1]:
-            formatted_result.append(f"and {number_encoding.get(count)} {enemy}{"s" if count > 1 else ""}")
-
-        else:
-            formatted_result.append(f"{number_encoding.get(count)} {enemy}{"s" if count > 1 else ""}")
-    
-    return formatted_result
-
 number_encoding = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven", 8: "eight", 9: "nine", 10: "ten", 11: "eleven", 12: "twelve",
                    13: "thirteen", 14: "fourteen", 15: "fifteen", 16: "sixteen", 17: "seventeen", 18: "eighteen", 19: "nineteen", 20: "twenty"}
 
 class DungeonRoom:
 
-    def __init__(self, enemycount, difficulty):
+    def __init__(self, enemycount, difficulty, player):
         
         difficulty *= 10
         self.contained_enemies = []
+        self.enemycount = enemycount
+        self.invincible = 0
+
         for i in range(enemycount):
             self.contained_enemies.append(Enemy(difficulty))
+
+        attackdec = input(f"""You find yourself in a dungeon room. Trapped with you are {enemycount} different enemies. What will you do? Think fast.
+
+              a) Attack as many enemies as you can.
+              b) Use your special move -- {player.special_move}.
+              c) Sit there and watch, horrified.\n\n""")
+
+        while True:
+
+            while True:
+                if attackdec not in ["a", "b", "c"]:
+                    attackdec = input(f"You try to do option {attackdec}, but you realise that's not an option. Please respond with just the letter: a, b or c?\n\n")
+                else: break
+        
+            if attackdec == "a":
+                print("You attack the closest five enemies to you. Here is what you manage.")
+
+                for enemy in self.contained_enemies[enemycount - 6:]:
+                    player.attack(enemy)
+
+                    if enemy.health <= 0:
+                        self.contained_enemies.remove(enemy)
+
+                print("\n" * 5 + "The tension builds in the room. The monsters' fury spreads like a wildfire. Suddenly: the enemies all go for an attack.")
+
+                if randint(0,1) == 0:
+                    self.allattack_player(player)
+                else:
+                    print("However!")
+                    self.allattack_eachother()
+
+            elif attackdec == "b":
+            
+                if player.special_move == "heal":
+                    player.health += 1000
+                    print(f"You feel a surge of relief and blood rushes through your veins. Your health increases by 1 000. You now have {player.health} hit points.")
+                elif player.special_move == "rip" or player.special_move == "enrage":
+                    print(f"Rage pumps through your veins. The pure thought of these monsters continuing to exist fuels your wrath. BANG!")
+                    for enemy in self.contained_enemies[1:]:
+                        player.attack(enemy, player.weak_attack_strength)  # weaker attack used for sweep attacks
+
+                        if enemy.health <= 0:
+                            self.contained_enemies.remove(enemy)
+
+                    print(f"Only a {self.contained_enemies[0].identify_type()} gets away unscathed. In fear, it runs away, exiting the dungeon.")
+                    self.contained_enemies.pop(0)
+
+                if player.special_move == "invincible": self.invincible = 1
+
+            elif attackdec == "c":
+
+                print("""You watch as the monsters consult, wondering what to do with you. 
+                  Though you cannot make out most of their language, there is one word you do understand -- they all collectively scream:
+
+                  'ATTACK!'\n""")
+
+                if randint(0,2) == 0:
+                    self.allattack_player(player)  # only 1/3 chance so that there's a bigger chance they don't immediately die for being stupid
+                else:
+                    print("However...")
+                    self.allattack_eachother()
+
+            if not self.contained_enemies:
+                break
+
+            attackdec = input("You are given the same options as before. What will you do; a, b or c?\n\n")
+
+        self.loot_dungeon(player)
 
     # this will be useful in the allattack method
     def format_enemyarray(self, arr):
@@ -56,7 +111,7 @@ class DungeonRoom:
         for enemy in self.contained_enemies:
             attackvalues = enemy.attack(player, attackmode="dungeon")
             
-            if attackvalues[2] == 1:  # it returns 1 if there is a hit or 0 if there isn't
+            if attackvalues[2] == 1 and self.invincible == 0:  # it returns 1 if there is a hit or 0 if there isn't. if invincible, attack must miss.
                 hitters.append(attackvalues)
             else:
                 missers.append(attackvalues)
@@ -89,9 +144,49 @@ class DungeonRoom:
 
             You are left with {player.health} hit points after the attack.""")
 
-    def allattack_eachother(self):
+    def allattack_eachother(self):  # requires PATCHING
 
-        pass
+        print("Confused, every enemy in the dungeon attacks one another. This is how it goes down.")
+        events = ""
+        for enemy in range(self.enemycount):
+            
+            if randint(0, 100) < 65: hit = 1
+            else: hit = 0
+
+            choosable_enemies = self.contained_enemies; choosable_enemies.pop(enemy - 1)  # disallowing an enemy to attack itself.
+
+            cur_enemy = self.contained_enemies[enemy - 1]
+            attacked_enemy = choice(choosable_enemies)
+            if cur_enemy.identify_type()[0] == "e": ca = "an"
+            else: ca = "a"  # only enraged wizards start with a vowel
+            
+            if attacked_enemy.identify_type()[0] == "e": aa = "an"
+            else: aa = "a"
+
+            attack = cur_enemy.attack(attacked_enemy, "dungeon")  # every enemy attacks a random other enemy
+            
+            possible_dmg = attack[1]
+
+            if hit == 1:
+                attacked_enemy.health -= possible_dmg
+
+                if enemy == 0:
+                    events += f"{ca.upper()} {cur_enemy.identify_type()} attacks {aa} {attacked_enemy.identify_type()} for {possible_dmg} hit points"
+                elif enemy != self.enemycount - 1:
+                    events += f", {ca} {cur_enemy.identify_type()} attacks {aa} {attacked_enemy.identify_type()} for {possible_dmg} hit points"
+                else:
+                    events += f" and {ca} {cur_enemy.identify_type()} attacks {aa} {attacked_enemy.identify_type()} for {possible_dmg} hit points."
+
+            if hit == 0:
+
+                if enemy == 0:
+                    events += f"{ca.upper()} {cur_enemy.identify_type()} misses an attack on {aa} {attacked_enemy.identify_type()} that would've dealt {possible_dmg} damage"
+                elif enemy != self.enemycount - 1:
+                    events +=  f", {ca} {cur_enemy.identify_type()} misses an attack on {aa} {attacked_enemy.identify_type()} that would've dealt {possible_dmg} damage"
+                else:
+                    events += f" and {ca} {cur_enemy.identify_type()} misses an attack on {aa} {attacked_enemy.identify_type()} that would've dealt {possible_dmg} damage."
+            
+            print(events)
 
     def loot_dungeon(self, player):
 
@@ -201,7 +296,7 @@ class TripleDoorRoom:
 
         print("You leave the room completely unscathed. You were lucky this time.")
 
-class ShootRoom:
+class ShootRoom:  # this is a simple room. you are given the opportunity to shoot your enemy, or just do a normal attack.
 
     def __init__(self, difficulty, player):  # difficulty is 1, 2 or 3
 

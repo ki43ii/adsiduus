@@ -119,15 +119,30 @@ class Player:
 
         self.level = current_level
         self.xp = current_xp
-        # dividing by 5 to avoid overpowering level 9 players
-        self.attack_strength = stats.get(playertype)[0] * self.level // 2  
+        # dividing by 5 to avoid overpowering high level players
+        self.attack_strength = stats.get(playertype)[0] * self.level // 2
+        self.weak_attack_strength = self.attack_strength // 7
         self.defense = stats.get(playertype)[1] // 2 + stats.get(playertype)[1] * self.level // 5
         self.health = stats.get(playertype)[2] // 2 + stats.get(playertype)[2] * self.level // 5
         self.hit_chance = 60 + stats.get(playertype)[0] * self.level // 40
         self.special_move = stats.get(playertype)[3]
+        self.weapon = weapons.get(playertype)[self.level - 1]  # as levels are 1-indexed
         print(f"Congratulations on beginning your adventure as a {playertype}.")
         print(f"You will begin your journey as a level 1 with your trusty {weapons.get(playertype)[self.level - 1]}.")
         print(f"You are granted an incredible power; your special move is {self.special_move}.")
+
+        self.stats = f"""Here are your player's stats:
+
+            Attack strength:        {self.attack_strength}
+            Sweep attack strength:  {self.weak_attack_strength}  (Used during wide attacks)
+            Defense:                {self.defense}
+            Health:                 {self.health}
+            Hit chance:             {self.hit_chance}
+            Special move:           {self.special_move}
+            Weapon:                 {self.weapon}
+
+            Level:                  {self.level}
+            Experience:             {self.xp}"""
 
     def levelup(self):
 
@@ -136,7 +151,7 @@ class Player:
             self.level += 1
 
             savefile = open("savefile.txt", "w")
-            savefile.write("{'level' : " + self.level + ", 'xp' : " + self.xp + "}")
+            savefile.write(f"{'level' : '{self.level}', 'xp' : '{self.xp}'}")
 
             self.attack_strength = stats.get(playertype)[0] * self.level // 5
             self.defense = stats.get(playertype)[1] // 2 + stats.get(playertype)[1] * self.level // 5
@@ -149,16 +164,23 @@ class Player:
 
                   Remember, at any time, typing stats will give a list of your stats.\n\n""")
 
-    def attack(self, target):
+    def attack(self, target, attack_strength=None):
         
-        possible_damage = self.attack_strength * 50 // target.defense # roughly 50 is average defense stat
+        if attack_strength == None: attack_strength = self.attack_strength  # no idea why i had to do this. python is dumb.
+
+        possible_damage = attack_strength * 50 // target.defense # roughly 50 is average defense stat
 
         if randint(0, 100) <= self.hit_chance:
             
             target.health -= possible_damage
 
-            print(f"""You attack the {target.identify_type()}. You have dealt {str(possible_damage)} damage to it.
+            print(f"""You attack the {target.identify_type()} with your {self.weapon}. You have dealt {str(possible_damage)} damage to it.
                   It is left with {target.health} hit points.""")
+        
+        if target.health <= 0:
+            target.dead_byplayer(self)
+
+    
 
     def dead(self):
         pass
