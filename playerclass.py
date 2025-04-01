@@ -8,7 +8,7 @@ previous_save = literal_eval(previous_save)
 current_level = previous_save.get("level")
 current_xp = previous_save.get("xp")
 
-enemytypes = {0: "dog", 10: "wolf", 20: "man", 30: "guard", 40: "armed guard", 50: "lead guard",
+enemytypes = {0: "dog", 10: "wolf", 20: "goblin", 30: "guard", 40: "armed guard", 50: "lead guard",
               60: "wizard", 70: "enraged wizard", 80: "high wizard", 90: "grand sorcerer",
               100: "tarrasque"}
 

@@ -60,19 +60,22 @@ class DungeonRoom:
                     player.health += 1000
                     print(f"You feel a surge of relief and blood rushes through your veins. Your health increases by 1 000. You now have {player.health} hit points.")
                 elif player.special_move == "rip" or player.special_move == "enrage":
-                    print(f"Rage pumps through your veins. The pure thought of these monsters continuing to exist fuels your wrath. BANG!")
+                    print(f"Rage pumps through your veins. The pure thought of these monsters continuing to exist fuels your wrath. BANG!\n\n\n\n\n")
+                    sleep(5)
+
                     for enemy in self.contained_enemies[1:]:
                         player.attack(enemy, player.weak_attack_strength)  # weaker attack used for sweep attacks
 
                         if enemy.health <= 0:
                             self.contained_enemies.remove(enemy)
 
-                    print(f"Only a {self.contained_enemies[0].identify_type()} gets away unscathed. In fear, it runs away, exiting the dungeon.")
+                    print(f"Only a {self.contained_enemies[0].identify_type()} gets away unscathed. In fear, it runs away, exiting the dungeon.\n\n")
                     self.contained_enemies.pop(0)
 
                 if player.special_move == "invincible": self.invincible = 1
 
-                print("Immediately, every monster jumps up simultaneously. They sprint forward and attack you simultaneously.")
+                print("Immediately, every monster jumps up; they sprint forward and attack you simultaneously.\n\n\n\n\n")
+                sleep(3)
 
                 self.allattack_player(player)
 
@@ -81,7 +84,9 @@ class DungeonRoom:
                 print("""You watch as the monsters consult, wondering what to do with you. 
                   Though you cannot make out most of their language, there is one word you do understand -- they all collectively scream:
 
-                  'ATTACK!'\n""")
+                  'ATTACK!'\n\n\n\n""")
+
+                sleep(3)
 
                 if randint(0,2) == 0:
                     self.allattack_player(player)  # only 1/3 chance so that there's a bigger chance they don't immediately die for being stupid
@@ -154,13 +159,12 @@ class DungeonRoom:
     def allattack_eachother(self):  # requires PATCHING
         print("Confused, every enemy in the dungeon attacks another. This is how it goes down.")
 
-        for enemy in range(0, self.enemycount - 1):
+        for enemy in range(0, len(self.contained_enemies) - 1):
             
             if randint(0, 100) < 65: hit = 1
             else: hit = 0
 
             choosable_enemies = self.contained_enemies.copy()
-            choosable_enemies.pop(enemy)  # disallowing an enemy to attack itself.
 
             cur_enemy = self.contained_enemies[enemy]
             attacked_enemy = choice(choosable_enemies)
@@ -186,7 +190,7 @@ class DungeonRoom:
 
     def loot_dungeon(self, player):
 
-        loot = choice(["a potion of healing.", "absolutely nothing.", "a genie with one wish.", "a one-time revive pass."])
+        loot = choice(["a potion of healing.", "a potion of healing.", "a potion of healing.", "a potion of healing.", "absolutely nothing.", "a genie with one wish.", "a one-time revive pass.", "a one-time revive pass."])
         print(f"After defeating all the enemies, you find a chest. You open it grandiosely -- and you are rewarded with {loot}")
 
         if loot == "a potion of healing.":

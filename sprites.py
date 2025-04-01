@@ -30,3 +30,5 @@ def image_to_ascii(image_path, new_width=80):
     return ascii_str  # ✅ Returns the colored ASCII string
 
 sprites = {"barbarian" : None}
+
+print(image_to_ascii("allsprites/bg.png"), 20)
