@@ -1,6 +1,7 @@
 from playerclass import *
 from roomdefinitions import *
-from sprites import sprites
+from random import *
+from sprites import *
 
 playertype = input("""You will soon embark on your journey, fighting the horrible Glitch.
             A kind wizard appears next to you. He asks what class you would like to play.
@@ -61,4 +62,4 @@ def stdmvmt():
         except TypeError:
             mvmtdecision = input("\nJust use the letter alone. Don't include brackets or anything.\n\n")
 
-room1 = DungeonRoom(20, 1, player)
+room1 = DungeonRoom(randint(15, 25), 1, player)

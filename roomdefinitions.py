@@ -14,6 +14,7 @@ class DungeonRoom:
         self.contained_enemies = []
         self.enemycount = enemycount
         self.invincible = 0
+        self.move_used = 0
 
         for i in range(enemycount):
             self.contained_enemies.append(Enemy(difficulty))
@@ -26,9 +27,14 @@ class DungeonRoom:
 
         while True:
 
+            if not self.contained_enemies:
+                break  # if everyone dies quit the loop
+
             while True:
                 if attackdec not in ["a", "b", "c"]:
                     attackdec = input(f"You try to do option {attackdec}, but you realise that's not an option. Please respond with just the letter: a, b or c?\n\n")
+                elif attackdec == "b" and self.move_used == 1:
+                    attackdec = input("You are still panting from the use of your special move before. You cannot use it again until after exiting this dungeon. You can only respond with the letters a or c now.\n\n")
                 else: break
         
             if attackdec == "a":
@@ -66,6 +72,10 @@ class DungeonRoom:
 
                 if player.special_move == "invincible": self.invincible = 1
 
+                print("Immediately, every monster jumps up simultaneously. They sprint forward and attack you simultaneously.")
+
+                self.allattack_player(player)
+
             elif attackdec == "c":
 
                 print("""You watch as the monsters consult, wondering what to do with you. 
@@ -78,9 +88,6 @@ class DungeonRoom:
                 else:
                     print("However...")
                     self.allattack_eachother()
-
-            if not self.contained_enemies:
-                break
 
             attackdec = input("You are given the same options as before. What will you do; a, b or c?\n\n")
 
@@ -138,24 +145,24 @@ class DungeonRoom:
         missenemiesstr = missenemies[0]
         for item in missenemies[1:]: missenemiesstr += f", {item}"
 
-        print(f"""Lucky you! You have managed to dodge {totaldamagemissed} hit points worth of damage from {missenemiesstr}.""")
+        print(f"""Lucky you! You have managed to dodge {totaldamagemissed} hit points worth of damage from {missenemiesstr}{" due to your invincibility move!" if self.invincible == 1 else "."}""")
         if totaldamagehit > 0:
             print(f"""However, you were unable to avoid {totaldamagehit} hit points worth of damage from {hitenemiesstr}.
 
             You are left with {player.health} hit points after the attack.""")
 
     def allattack_eachother(self):  # requires PATCHING
+        print("Confused, every enemy in the dungeon attacks another. This is how it goes down.")
 
-        print("Confused, every enemy in the dungeon attacks one another. This is how it goes down.")
-        events = ""
-        for enemy in range(self.enemycount):
+        for enemy in range(0, self.enemycount - 1):
             
             if randint(0, 100) < 65: hit = 1
             else: hit = 0
 
-            choosable_enemies = self.contained_enemies; choosable_enemies.pop(enemy - 1)  # disallowing an enemy to attack itself.
+            choosable_enemies = self.contained_enemies.copy()
+            choosable_enemies.pop(enemy)  # disallowing an enemy to attack itself.
 
-            cur_enemy = self.contained_enemies[enemy - 1]
+            cur_enemy = self.contained_enemies[enemy]
             attacked_enemy = choice(choosable_enemies)
             if cur_enemy.identify_type()[0] == "e": ca = "an"
             else: ca = "a"  # only enraged wizards start with a vowel
@@ -170,23 +177,12 @@ class DungeonRoom:
             if hit == 1:
                 attacked_enemy.health -= possible_dmg
 
-                if enemy == 0:
-                    events += f"{ca.upper()} {cur_enemy.identify_type()} attacks {aa} {attacked_enemy.identify_type()} for {possible_dmg} hit points"
-                elif enemy != self.enemycount - 1:
-                    events += f", {ca} {cur_enemy.identify_type()} attacks {aa} {attacked_enemy.identify_type()} for {possible_dmg} hit points"
-                else:
-                    events += f" and {ca} {cur_enemy.identify_type()} attacks {aa} {attacked_enemy.identify_type()} for {possible_dmg} hit points."
+                print(f"{ca.upper()} {cur_enemy.identify_type()} attacks {aa} {attacked_enemy.identify_type()} for {possible_dmg} hit points, leaving it on {attacked_enemy.health}")
+
+                if attacked_enemy.health <= 0: attacked_enemy.dead(); self.contained_enemies.remove(attacked_enemy)
 
             if hit == 0:
-
-                if enemy == 0:
-                    events += f"{ca.upper()} {cur_enemy.identify_type()} misses an attack on {aa} {attacked_enemy.identify_type()} that would've dealt {possible_dmg} damage"
-                elif enemy != self.enemycount - 1:
-                    events +=  f", {ca} {cur_enemy.identify_type()} misses an attack on {aa} {attacked_enemy.identify_type()} that would've dealt {possible_dmg} damage"
-                else:
-                    events += f" and {ca} {cur_enemy.identify_type()} misses an attack on {aa} {attacked_enemy.identify_type()} that would've dealt {possible_dmg} damage."
-            
-            print(events)
+                print(f"{ca.upper()} {cur_enemy.identify_type()} misses an attack on {aa} {attacked_enemy.identify_type()} that would've dealt {possible_dmg} damage")
 
     def loot_dungeon(self, player):
 
