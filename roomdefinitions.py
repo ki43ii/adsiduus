@@ -106,7 +106,7 @@ class DungeonRoom:
         formatted_result = []
         for enemy, count in sorted_enemy_counts:
             if enemy == sorted_enemy_counts[-1]:
-                formatted_result.append(f"and {number_encoding.get(count)} {enemy}{"s" if count > 1 else ""}")
+                if count > 1: formatted_result.append(f"and {number_encoding.get(count)} {enemy}s")
 
             else:
                 formatted_result.append(f"{number_encoding.get(count)} {enemy}{"s" if count > 1 else ""}")
@@ -150,7 +150,7 @@ class DungeonRoom:
         missenemiesstr = missenemies[0]
         for item in missenemies[1:]: missenemiesstr += f", {item}"
 
-        print(f"""Lucky you! You have managed to dodge {totaldamagemissed} hit points worth of damage from {missenemiesstr}{" due to your invincibility move!" if self.invincible == 1 else "."}""")
+        print(f"You manage to dodge {totaldamagemissed} hit points worth of damage from {missenemiesstr}.")
         if totaldamagehit > 0:
             print(f"""However, you were unable to avoid {totaldamagehit} hit points worth of damage from {hitenemiesstr}.
 
