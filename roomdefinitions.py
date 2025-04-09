@@ -27,9 +27,6 @@ class DungeonRoom:
 
         while True:
 
-            if not self.contained_enemies:
-                break  # if everyone dies quit the loop
-
             while True:
                 if attackdec not in ["a", "b", "c"]:
                     attackdec = input(f"You try to do option {attackdec}, but you realise that's not an option. Please respond with just the letter: a, b or c?\n\n")
@@ -63,11 +60,13 @@ class DungeonRoom:
                     print(f"Rage pumps through your veins. The pure thought of these monsters continuing to exist fuels your wrath. BANG!\n\n\n\n\n")
                     sleep(5)
 
+                    dead_enemies = []
                     for enemy in self.contained_enemies[1:]:
                         player.attack(enemy, player.weak_attack_strength)  # weaker attack used for sweep attacks
 
                         if enemy.health <= 0:
-                            self.contained_enemies.remove(enemy)
+                            dead_enemies.append(enemy)
+                    self.contained_enemies = [x for x in self.contained_enemies if x not in dead_enemies]
 
                     print(f"Only a {self.contained_enemies[0].identify_type()} gets away unscathed. In fear, it runs away, exiting the dungeon.\n\n")
                     self.contained_enemies.pop(0)
@@ -78,6 +77,8 @@ class DungeonRoom:
                 sleep(3)
 
                 self.allattack_player(player)
+
+                self.move_used = 1
 
             elif attackdec == "c":
 
@@ -94,6 +95,9 @@ class DungeonRoom:
                     print("However...")
                     self.allattack_eachother()
 
+            if len(self.contained_enemies) == 0:
+                break
+
             attackdec = input("You are given the same options as before. What will you do; a, b or c?\n\n")
 
         self.loot_dungeon(player)
@@ -107,9 +111,11 @@ class DungeonRoom:
         for enemy, count in sorted_enemy_counts:
             if enemy == sorted_enemy_counts[-1]:
                 if count > 1: formatted_result.append(f"and {number_encoding.get(count)} {enemy}s")
+                else: formatted_result.append(f"a {enemy}")
 
             else:
-                formatted_result.append(f"{number_encoding.get(count)} {enemy}{"s" if count > 1 else ""}")
+                if count > 1: formatted_result.append(f"and {number_encoding.get(count)} {enemy}s")
+                else: formatted_result.append(f"a {enemy}")
 
         return formatted_result
 
@@ -157,17 +163,20 @@ class DungeonRoom:
             You are left with {player.health} hit points after the attack.""")
 
     def allattack_eachother(self):  # requires PATCHING
-        print("Confused, every enemy in the dungeon attacks another. This is how it goes down.")
+        print("Confused, every enemy in the dungeon attacks another. This is how it goes down.\n\n\n\n\n")
 
-        for enemy in range(0, len(self.contained_enemies) - 1):
+        sleep(3)
+
+        for enemy in range(len(self.contained_enemies)):
             
             if randint(0, 100) < 65: hit = 1
             else: hit = 0
 
-            choosable_enemies = self.contained_enemies.copy()
-
             cur_enemy = self.contained_enemies[enemy]
-            attacked_enemy = choice(choosable_enemies)
+            attacked_enemy = choice(self.contained_enemies)
+
+            dead_enemies = []
+
             if cur_enemy.identify_type()[0] == "e": ca = "an"
             else: ca = "a"  # only enraged wizards start with a vowel
             
@@ -183,10 +192,14 @@ class DungeonRoom:
 
                 print(f"{ca.upper()} {cur_enemy.identify_type()} attacks {aa} {attacked_enemy.identify_type()} for {possible_dmg} hit points, leaving it on {attacked_enemy.health}")
 
-                if attacked_enemy.health <= 0: attacked_enemy.dead(); self.contained_enemies.remove(attacked_enemy)
+                if attacked_enemy.health <= 0: 
+                    attacked_enemy.dead()
+                    dead_enemies.append(attacked_enemy)
 
             if hit == 0:
                 print(f"{ca.upper()} {cur_enemy.identify_type()} misses an attack on {aa} {attacked_enemy.identify_type()} that would've dealt {possible_dmg} damage")
+
+        self.contained_enemies = [x for x in self.contained_enemies if x not in dead_enemies]
 
     def loot_dungeon(self, player):
 
@@ -257,8 +270,7 @@ class TripleDoorRoom:
             while True:
 
                 if attackcheck not in ("a", "b"):
-
-                    attackcheck = input(f"You try to use option {attackcheck}, but you realise that it's not an actual option. Please respond with just the letter (a or b).\n\n")
+                    attackcheck = input(f"You try to do option {attackcheck}, but you realise that's not an option. The {enemy.identify_type()} approaches. You don't have much time. Respond with the option a or b, before it's too late.\n\n")
 
                 else:
                     break
