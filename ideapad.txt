@@ -1,11 +1,26 @@
 REQUIRED ASCII ART!!
 
+These sprites must be a maximum of 80x40 (80px width, 40px height) for backgrounds, and much smaller for other sprites.
+Here are the sizes (roughly):
+
+Sprite		Size	Note
+
+Backgrounds:	80x40
+Enemies:	15x10	(or larger depending on the power of the enemy)
+Player Classes:	20x15
+Weapons:	5x4	(don't worry too much about this one, it isn't very important)
+
+
+BACKGROUNDS:
+
 BARBARIAN (levels 0-4), BARBARIAN (levels 5-9)
 WARRIOR (levels 0-4), WARRIOR (levels 5-9)
 TANK (levels 0-4), TANK (levels 5-9)
 HEALER (levels 0-4), HEALER (5-9)
 
-FOR EACH OF THE FOLLOWING, A WEAK AND POWERFUL VERSION IS REQUIRED
+
+ENEMIES:
+
 dog
 wolf
 unarmed guard
@@ -17,7 +32,8 @@ high wizard
 grand sorcerer
 tarrasque
 
-WEAPONS
+
+WEAPONS:
 
 short-range
 knife
@@ -50,7 +66,7 @@ lancet (tests blood sugar)
 thermometer
 obsidian scalpel
 
-hands
+hands (use an empty sprite just "")
 short-sword
 bow and arrow
 katana
@@ -59,5 +75,3 @@ spinny spiky spoon
 crossbow
 dual-wield katana
 pistol
-
-MAKE AS MANY BACKGROUNDS (inside rooms) AS YOU CAN. WE WILL COME UP WITH ROOM IDEAS LATER.
