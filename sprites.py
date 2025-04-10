@@ -80,4 +80,17 @@ def overlayer(img1, img2, box):
 
 sprites = {"barbarian" : None}  # to be completed
 
+def create_scene(bg, enemies: list, player, weapon):
+    
+    enemy_shuffled = shuffle(enemies)
+    scene = bg
+    box = None  # will figure out later
+    for enemy in enemies:
+        scene = overlayer(scene, enemy, box)
+
+    scene = overlayer(scene, player)
+    scene = overlayer(scene, weapon)
+
+    return scene
+
 print(image_to_ascii("allsprites/bg.png", 20))

@@ -362,3 +362,10 @@ class ShootRoom:  # this is a simple room. you are given the opportunity to shoo
                 enemy.attack(player)
 
             decision = input("You have the same options as before. a, b, or c?\n\n")
+
+class EmptyRoom:
+
+    def __init__(self, player, enemycount = randint(0,1)):
+
+        pass
+

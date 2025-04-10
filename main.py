@@ -25,7 +25,9 @@ scene = ""
 print("""At any time in this playthrough, you can use the following commands.
       1) stats -- This prints out your character's current statistics (e.g. their attack_strength, defense, etc.)
       2) scene -- This prints out the current scene using coloured ASCII art.
-      3) help -- This will print out this exact string of text you are seeing right now!""")
+      3) help -- This will print out this exact string of text you are seeing right now!\n""")
+
+import builtins as b  # looks wonky but i need to do this
 
 stdinput = input
 
@@ -35,7 +37,7 @@ special_commands = {
     "help": """At any time in this playthrough, you can use the following commands.
     1) stats -- This prints out your character's current statistics (e.g. their attack_strength, defense, etc.)
     2) scene -- This prints out the current scene using coloured ASCII art.
-    3) help -- This will print out this exact string of text you are seeing right now!"""}
+    3) help -- This will print out this exact string of text you are seeing right now!\n"""}
 
 def custom_input(prompt=""):
     
@@ -46,20 +48,26 @@ def custom_input(prompt=""):
             continue
         return user_input
 
-input = custom_input
+b.input = custom_input
 
 def stdmvmt():
-    mvmtdecision = input("""How would you like to move?
+    mvmtdecision = input("""\n\nYou can now move in any direction. You can also see a map of the rooms you've been to.
 
                          a) Up.
                          b) Down.
                          c) Left.
-                         d) Right.""")
+                         d) Right.
+                         e) Map.""")
     while True:
         try:
-            mvmtdecision = {"a": "up", "b": "down", "c": "left", "d": "right"}.get(mvmtdecision)
+            mvmtdecision = {"a": "up", "b": "down", "c": "left", "d": "right", "e": "map"}[mvmtdecision]
             break
         except TypeError:
             mvmtdecision = input("\nJust use the letter alone. Don't include brackets or anything.\n\n")
+
+    if mvmtdecision == "e":
+        pass
+
+    return mvmtdecision
 
 room1 = DungeonRoom(randint(15, 25), 1, player)

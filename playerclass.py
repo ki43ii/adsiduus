@@ -145,7 +145,7 @@ class Player:
             Weapon:                 {self.weapon}
 
             Level:                  {self.level}
-            Experience:             {self.xp}"""
+            Experience:             {self.xp}\n"""
 
     def levelup(self):
 
