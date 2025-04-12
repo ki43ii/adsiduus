@@ -1,12 +1,5 @@
-from ast import literal_eval
+from time import sleep
 from random import randint
-
-savefile = open("savefile.txt", "r")
-previous_save = savefile.read()
-previous_save = literal_eval(previous_save)
-
-current_level = previous_save.get("level")
-current_xp = previous_save.get("xp")
 
 enemytypes = {0: "dog", 10: "wolf", 20: "goblin", 30: "guard", 40: "armed guard", 50: "lead guard",
               60: "wizard", 70: "enraged wizard", 80: "high wizard", 90: "grand sorcerer",
@@ -32,7 +25,7 @@ class Enemy:
             self.hit_chance = 70
 
         elif enemypower == 2:
-            
+
             self.attack_strength = randint(40, 80)
             self.defense = randint(40, 80)
             self.health = randint(120, 250)
@@ -118,10 +111,11 @@ weapons = {"barbarian" : ("short-range knife", "hatchet", "rope", "mace",
 
 class Player:
 
-    def __init__(self, playertype):
+    def __init__(self, playertype, save, savefile):
 
-        self.level = current_level
-        self.xp = current_xp
+        self.savefile = savefile
+        self.level = save.get("level")
+        self.xp = save.get("xp")
         # dividing by 5 to avoid overpowering high level players
         self.attack_strength = stats.get(playertype)[0] * self.level // 2
         self.weak_attack_strength = self.attack_strength // 7
@@ -186,4 +180,12 @@ class Player:
     
 
     def dead(self):
-        pass
+
+        print("""Your vision blurs. You feel your heart slow down. Your fingers go numb, dropping your weapon.
+
+        This is the end.""")
+        sleep(2)
+
+        print("""Through your foggy eyes, you see a dark wizard. You hear the terrible voice say to you:
+
+        """)

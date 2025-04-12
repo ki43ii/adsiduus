@@ -45,7 +45,7 @@ class DungeonRoom:
 
                 print("\n" * 5 + "The tension builds in the room. The monsters' fury spreads like a wildfire. Suddenly: the enemies all go for an attack.")
 
-                if randint(0,1) == 0:
+                if randint(1,2) == 1:
                     self.allattack_player(player)
                 else:
                     print("However!")
@@ -89,7 +89,7 @@ class DungeonRoom:
 
                 sleep(3)
 
-                if randint(0,2) == 0:
+                if randint(1,3) == 1:
                     self.allattack_player(player)  # only 1/3 chance so that there's a bigger chance they don't immediately die for being stupid
                 else:
                     print("However...")
@@ -365,7 +365,7 @@ class ShootRoom:  # this is a simple room. you are given the opportunity to shoo
 
 class EmptyRoom:
 
-    def __init__(self, player, enemycount = randint(0,1)):
+    def __init__(self, player, enemycount = randint(0,1), mathcheck = randint(0,2)):
 
         pass
 
