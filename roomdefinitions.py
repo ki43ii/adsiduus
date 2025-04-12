@@ -15,6 +15,7 @@ class DungeonRoom:
         self.enemycount = enemycount
         self.invincible = 0
         self.move_used = 0
+        player.cur_room = "dungeon"
 
         for i in range(enemycount):
             self.contained_enemies.append(Enemy(difficulty))
@@ -139,7 +140,7 @@ class DungeonRoom:
             hitenemies.append(hit[0])
             totaldamagehit += hit[1]
 
-            player.health -= hit[1]
+            player.damage(hit[0], hit[1])
 
         for miss in missers:
 
@@ -223,6 +224,7 @@ class TripleDoorRoom:
     def __init__(self, difficulty, player):  # this should be given as a number 1-2
 
         self.difficulty = difficulty
+        player.cur_room = "three_door"
 
         roomchoice = input("""You stumble into a room with three doors. One door leads to you escaping completely unscathed. The other doors lead to traps; you don't yet know what they are, but you don't want to find out. You enter one of the following options on a piece of paper. Choose wisely.
 
@@ -308,10 +310,11 @@ class TripleDoorRoom:
 
         print("You leave the room completely unscathed. You were lucky this time.")
 
-class ShootRoom:  # this is a simple room. you are given the opportunity to shoot your enemy, or just do a normal attack.
+class ShootRoom:  # this is a simple room. you are given the opportunity to shoot your enemy, or just do a normal attack. (or die)
 
     def __init__(self, difficulty, player):  # difficulty is 1, 2 or 3
 
+        player.cur_room = "shoot_room"
         enemy = Enemy(difficulty)
 
         print("You find yourself face to face with a broken yellow door and a gun on the floor. You try to look through but its completely dark, you look down and see what seems to be a rolled up letter, you bend over to pick it up...")

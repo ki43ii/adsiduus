@@ -64,7 +64,7 @@ class Enemy:
                 return (self.identify_type(), possible_damage, 1)
             
             else:
-                target.health -= possible_damage
+                target.damage(self, possible_damage)
 
                 print(f"""You have been hit by the {self.identify_type()}. It dealt {str(possible_damage)} damage to you.
                   You are left with {target.health} hit points.""")
@@ -93,8 +93,8 @@ class Enemy:
         player.levelup()
 
 # player attack and defense stats based on class
-stats = {"barbarian" : (100, 50, 200, "rip"), "tank" : (40, 80, 400, "invincible"),
-         "healer" : (60, 30, 300, "heal"), "warrior" : (150, 20, 150, "enrage")}
+stats = {"barbarian" : (100, 50, 300, "rip"), "tank" : (40, 80, 500, "invincible"),
+         "healer" : (60, 30, 400, "heal"), "warrior" : (150, 20, 350, "enrage")}
 
 # weapon for each level for each player class
 weapons = {"barbarian" : ("short-range knife", "hatchet", "rope", "mace",
@@ -109,21 +109,30 @@ weapons = {"barbarian" : ("short-range knife", "hatchet", "rope", "mace",
            "warrior" : ("hands", "shortsword", "bow and arrow", "katana", "spiked shield",
                         "spinny spiky spoon", "crossbow", "dual-wield katana", "pistol")}
 
+def save(p):
+    with open(savefile, "w") as savefile:
+        savefile.write("{" + f"level' : {p.level}, 'xp' : {p.xp}, 'playertype' : '{p.playertype}', 'checkpoint' : '{p.cur_room}'" + "}")
+
 class Player:
 
     def __init__(self, playertype, save, savefile):
 
+        print(playertype)
+        self.playertype = playertype
         self.savefile = savefile
+        self.save = save
+        self.cur_room = None
         self.level = save.get("level")
         self.xp = save.get("xp")
         # dividing by 5 to avoid overpowering high level players
         self.attack_strength = stats.get(playertype)[0] * self.level // 2
         self.weak_attack_strength = self.attack_strength // 7
         self.defense = stats.get(playertype)[1] // 2 + stats.get(playertype)[1] * self.level // 5
-        self.health = stats.get(playertype)[2] // 2 + stats.get(playertype)[2] * self.level // 5
+        self.health = save.get("health")
         self.hit_chance = 60 + stats.get(playertype)[0] * self.level // 40
         self.special_move = stats.get(playertype)[3]
         self.weapon = weapons.get(playertype)[self.level - 1]  # as levels are 1-indexed
+        save(self)
         print(f"Congratulations on beginning your adventure as a {playertype}.")
         print(f"You will begin your journey as a level 1 with your trusty {weapons.get(playertype)[self.level - 1]}.")
         print(f"You are granted an incredible power; your special move is {self.special_move}.")
@@ -147,19 +156,21 @@ class Player:
             self.xp -= 50
             self.level += 1
 
-            savefile = open("savefile.txt", "w")
-            savefile.write(f"{'level' : '{self.level}', 'xp' : '{self.xp}'}")
-
             self.attack_strength = stats.get(playertype)[0] * self.level // 5
             self.defense = stats.get(playertype)[1] // 2 + stats.get(playertype)[1] * self.level // 5
             self.health = stats.get(playertype)[2] // 2 + stats.get(playertype)[2] * self.level // 5
 
             self.weapon = weapons.get(playertype)[self.level - 1]  # as levels are 1-indexed
-
             print(f"""Congratulations! You have leveled up. You are now level {self.level}. Your weapon has also been upgraded to a {self.weapon}.
                   You now deal a little bit more damage to enemies, and you can defend more attacks.
 
                   Remember, at any time, typing stats will give a list of your stats.\n\n""")
+            save(self)
+
+    def damage(self, attacker, dealt_damage):
+
+        self.health -= dealt_damage
+        save(self)
 
     def attack(self, target, attack_strength=None):
         

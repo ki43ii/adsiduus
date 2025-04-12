@@ -92,5 +92,3 @@ def create_scene(bg, enemies: list, player, weapon):
     scene = overlayer(scene, weapon)
 
     return scene
-
-print(image_to_ascii("allsprites/bg.png", 20))

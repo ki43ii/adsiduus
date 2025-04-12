@@ -36,13 +36,13 @@ while True:
     else:
         break
     
+savefile = f"savefile-{savedec}.txt"
 
-with open(f"savefile-{savedec}.txt", "r") as save:
-    savefile = save
+with open(savefile, "r") as save:
     save = save.read()
     save = literal_eval(save)
 
-if save.get("player-class") == "TBD":
+if save.get("playertype") == "TBD":
 
     playertype = input("""You will soon embark on your journey, fighting the horrible Glitch.
             A kind wizard appears next to you. He asks what class you would like to play.
@@ -55,14 +55,14 @@ if save.get("player-class") == "TBD":
                 Choose wisely, as your choice determines your strength, and the weapons that you will be using.\n\n""").lower()
 
     while True:
-        try:
+        if playertype in ("a", "b", "c", "d"):
             player = Player({"a": "barbarian", "b": "tank", "c": "healer", "d": "warrior"}.get(playertype), save, savefile)
             break
-        except TypeError:
+        else:
             playertype = input("\nHe tells you to just use the letter alone. Don't include brackets or anything.\n\n")
 
 else:
-    player = Player(save.get("player-class"), save, savefile)
+    player = Player(save.get("playertype"), save, savefile)
 
 scene = ""
 
