@@ -27,7 +27,7 @@ def image_to_ascii(image_path, new_width=80):
             ascii_str += f"\033[38;2;{r};{g};{b}m{char}"  # ANSI escape color
         ascii_str += "\033[0m\n"  # Reset color at end of line
 
-    return ascii_str  # ✅ Returns the colored ASCII string
+    return ascii_str  # returns coloured ascii string
 
 import re
 
@@ -92,3 +92,4 @@ def create_scene(bg, enemies: list, player, weapon):
     scene = overlayer(scene, weapon)
 
     return scene
+
