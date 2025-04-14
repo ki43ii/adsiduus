@@ -389,16 +389,20 @@ class EmptyRoom:
 
         You have 45 seconds.\n\n\n\n)""")
         
-        after_ans_time = time()
-
         while True:
+            
+            after_ans_time = time()
 
             if after_ans_time - before_ans_time >= 45:
-                print("""It morphs again. Suddenly, you feel a horrible pain in your foot.
+                print("""It morphs again. 
+
+        \033[1;31mToo late.                
+
+Suddenly, you feel a horrible pain in your foot.
 
 You take 50 damage.\n""")
                 player.damage(50)
         
             elif answer != self.ans[qnumber]:
 
-                input("That isn't quite right. Make sure your input is spelt correctly if you forgot.")  # to be completed
+                answer = input("That isn't quite right. Make sure your input is spelt correctly if you forgot.\n\n")  # to be completed
