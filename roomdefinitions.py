@@ -368,7 +368,37 @@ class ShootRoom:  # this is a simple room. you are given the opportunity to shoo
 
 class EmptyRoom:
 
-    def __init__(self, player, enemycount = randint(0,1), mathcheck = randint(0,2)):
+    def __init__(self, player):
 
-        pass
+        self.q_ans = {}
+        self.q = tuple(self.q_ans.keys())
+        self.ans = tuple(self.q_ans.values())
 
+        qnumber = randint(0,len(self.questions))
+
+        print("""You step into an empty room. On the wall, you see a bloody inscription.
+
+        \033[1;31m Would you like to play a game?
+
+        The writing morphs.""")
+
+        sleep(3)
+
+        before_ans_time = time()
+        answer = input(f"""\033[1;31m{self.q[qnumber]}
+
+        You have 45 seconds.\n\n\n\n)""")
+        
+        after_ans_time = time()
+
+        while True:
+
+            if after_ans_time - before_ans_time >= 45:
+                print("""It morphs again. Suddenly, you feel a horrible pain in your foot.
+
+You take 50 damage.\n""")
+                player.damage(50)
+        
+            elif answer != self.ans[qnumber]:
+
+                input("That isn't quite right. Make sure your input is spelt correctly if you forgot.")  # to be completed

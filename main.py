@@ -110,7 +110,7 @@ def stdmvmt():
                          b) Down.
                          c) Left.
                          d) Right.
-                         e) Map.""")
+                         e) Map.\n\n""")
     while True:
         try:
             mvmtdecision = {"a": "up", "b": "down", "c": "left", "d": "right", "e": "map"}[mvmtdecision]
@@ -122,3 +122,15 @@ def stdmvmt():
         pass
 
     return mvmtdecision
+
+print("\n\nYou wake up in a completely empty room; all by yourself. Four doors appear at your front, back, left and right. You realise that you'll be stuck here quite a while...")
+
+while True:
+
+    stdmvmt()
+    difficulty = player.level // 2.5
+    room = choice((ShootRoom(difficulty, player),
+                   DungeonRoom(randint(15,25), difficulty, player),
+                   DungeonRoom(randint(15,25), difficulty, player),
+                   TripleDoorRoom(difficulty, player),
+                   EmptyRoom(player)))
