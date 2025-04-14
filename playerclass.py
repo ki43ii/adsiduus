@@ -36,7 +36,7 @@ class Enemy:
             self.attack_strength = randint(5, 30)
             self.defense = randint(15, 30)
             self.health = randint(15, 30)
-            self.hit_chance = 10
+            self.hit_chance = 7
 
         else:
 
@@ -128,7 +128,8 @@ class Player:
         self.attack_strength = stats.get(playertype)[0] * self.level // 2
         self.weak_attack_strength = self.attack_strength // 7
         self.defense = stats.get(playertype)[1] // 2 + stats.get(playertype)[1] * self.level // 5
-        self.health = self.save.get("health")
+        if self.save.get("health") == None: self.health = stats.get(playertype)[2] // 2 + stats.get(playertype)[2] * self.level // 5
+        else: self.health = self.save.get("health")
         self.hit_chance = 60 + stats.get(playertype)[0] * self.level // 40
         self.special_move = stats.get(playertype)[3]
         self.weapon = weapons.get(playertype)[self.level - 1]  # as levels are 1-indexed
@@ -165,12 +166,12 @@ class Player:
                   You now deal a little bit more damage to enemies, and you can defend more attacks.
 
                   Remember, at any time, typing stats will give a list of your stats.\n\n""")
-            save(self)
+            save(self, self.savefile)
 
     def damage(self, attacker, dealt_damage):
 
         self.health -= dealt_damage
-        save(self)
+        save(self, self.savefile)
 
     def attack(self, target, attack_strength=None):
         

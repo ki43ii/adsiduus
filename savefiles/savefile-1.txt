@@ -1,0 +1,1 @@
+{'level' : 1, 'xp' : 30.0, 'playertype' : 'barbarian', 'checkpoint' : 'None'}

@@ -1,1 +1,0 @@
-{'level' : 1, 'xp' : 0, 'health' : 200, 'playertype' : 'TBD', 'checkpoint' : 0}

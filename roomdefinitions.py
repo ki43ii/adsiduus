@@ -9,214 +9,187 @@ number_encoding = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six
 class DungeonRoom:
 
     def __init__(self, enemycount, difficulty, player):
+
+        print(f"You find yourself in a dungeon room, trapped with {enemycount} angry enemies.")
         
-        difficulty *= 10
         self.contained_enemies = []
         self.enemycount = enemycount
         self.invincible = 0
         self.move_used = 0
         player.cur_room = "dungeon"
 
-        for i in range(enemycount):
-            self.contained_enemies.append(Enemy(difficulty))
-
-        attackdec = input(f"""You find yourself in a dungeon room. Trapped with you are {enemycount} different enemies. What will you do? Think fast.
-
-              a) Attack as many enemies as you can.
-              b) Use your special move -- {player.special_move}.
-              c) Sit there and watch, horrified.\n\n""")
-
-        while True:
-
-            while True:
-                if attackdec not in ["a", "b", "c"]:
-                    attackdec = input(f"You try to do option {attackdec}, but you realise that's not an option. Please respond with just the letter: a, b or c?\n\n")
-                elif attackdec == "b" and self.move_used == 1:
-                    attackdec = input("You are still panting from the use of your special move before. You cannot use it again until after exiting this dungeon. You can only respond with the letters a or c now.\n\n")
-                else: break
+        for _ in range(enemycount):
+            self.contained_enemies.append(Enemy(10))
         
+        while self.contained_enemies:
+            attackdec = input(f"""What will you do next?
+        a) Attack as many enemies as you can.
+        b) Use your special move -- {player.special_move}.
+        c) Sit there and watch, horrified.\n\n""")
+
+            while attackdec not in ["a", "b", "c"] or (attackdec == "b" and self.move_used == 1):
+                
+                if attackdec not in ["a", "b", "c"]:
+                    attackdec = input(f"You try to do option {attackdec}, but that's not an option. Please respond with a, b, or c: ")
+                
+                elif attackdec == "b" and self.move_used == 1:
+                    attackdec = input("You are still panting from your special move. You can only choose a or c now: ")
+            
             if attackdec == "a":
+            
                 print("You attack the closest five enemies to you. Here is what you manage.")
-
-                for enemy in self.contained_enemies[enemycount - 6:]:
+                
+                for enemy in self.contained_enemies[-5:]:
                     player.attack(enemy)
-
+                
                     if enemy.health <= 0:
                         self.contained_enemies.remove(enemy)
+                
+                self.contained_enemies = [e for e in self.contained_enemies if e.health > 0]  # cleaning up dead enemies
 
-                print("\n" * 5 + "The tension builds in the room. The monsters' fury spreads like a wildfire. Suddenly: the enemies all go for an attack.")
-
-                if randint(1,2) == 1:
+                print("\n" * 5 + "The tension builds. Suddenly, the enemies all attack.")
+                
+                if randint(1, 2) == 1:
                     self.allattack_player(player)
+                
                 else:
                     print("However!")
                     self.allattack_eachother()
-
+            
             elif attackdec == "b":
             
                 if player.special_move == "heal":
+                
                     player.health += 1000
-                    print(f"You feel a surge of relief and blood rushes through your veins. Your health increases by 1 000. You now have {player.health} hit points.")
-                elif player.special_move == "rip" or player.special_move == "enrage":
-                    print(f"Rage pumps through your veins. The pure thought of these monsters continuing to exist fuels your wrath. BANG!\n\n\n\n\n")
+                    print(f"You feel a surge of relief. Your health increases by 1000 to {player.health} hit points.")
+                
+                elif player.special_move in ["rip", "enrage"]:
+                
+                    print("Rage surges through you. The thought of these monsters continuing to exist fuels your wrath... BANG!\n")
                     sleep(5)
-
                     dead_enemies = []
+                    
                     for enemy in self.contained_enemies[1:]:
-                        player.attack(enemy, player.weak_attack_strength)  # weaker attack used for sweep attacks
-
+                        player.attack(enemy, player.weak_attack_strength)
+                    
                         if enemy.health <= 0:
                             dead_enemies.append(enemy)
+                    
                     self.contained_enemies = [x for x in self.contained_enemies if x not in dead_enemies]
-
-                    print(f"Only a {self.contained_enemies[0].identify_type()} gets away unscathed. In fear, it runs away, exiting the dungeon.\n\n")
-                    self.contained_enemies.pop(0)
-
-                if player.special_move == "invincible": self.invincible = 1
-
-                print("Immediately, every monster jumps up; they sprint forward and attack you simultaneously.\n\n\n\n\n")
+                    
+                    if self.contained_enemies:
+                        print(f"Only a {self.contained_enemies[0].identify_type()} escapes. It runs away from the dungeon.\n")
+                        self.contained_enemies.pop(0)
+                
+                if player.special_move == "invincible":
+                    self.invincible = 1
+                
+                print("Immediately, every monster attacks you simultaneously.\n")
                 sleep(3)
-
                 self.allattack_player(player)
-
                 self.move_used = 1
-
+            
             elif attackdec == "c":
-
-                print("""You watch as the monsters consult, wondering what to do with you. 
-                  Though you cannot make out most of their language, there is one word you do understand -- they all collectively scream:
-
-                  'ATTACK!'\n\n\n\n""")
-
+                print("You watch as the monsters confer and then scream: 'ATTACK!'\n")
                 sleep(3)
-
-                if randint(1,3) == 1:
-                    self.allattack_player(player)  # only 1/3 chance so that there's a bigger chance they don't immediately die for being stupid
+            
+                if randint(1, 3) == 1:
+                    self.allattack_player(player)
+                
                 else:
                     print("However...")
                     self.allattack_eachother()
-
-            if len(self.contained_enemies) == 0:
-                break
-
-            attackdec = input("You are given the same options as before. What will you do; a, b or c?\n\n")
-
+        
         self.loot_dungeon(player)
 
-    # this will be useful in the allattack method
     def format_enemyarray(self, arr):
-        enemy_counts = Counter(arr)
-        sorted_enemy_counts = sorted(enemy_counts.items(), key=lambda item: item[1], reverse=True)  # sorts by count descending
-
-        formatted_result = []
-        for enemy, count in sorted_enemy_counts:
-            if enemy == sorted_enemy_counts[-1]:
-                if count > 1: formatted_result.append(f"and {number_encoding.get(count)} {enemy}s")
-                else: formatted_result.append(f"a {enemy}")
-
-            else:
-                if count > 1: formatted_result.append(f"and {number_encoding.get(count)} {enemy}s")
-                else: formatted_result.append(f"a {enemy}")
-
-        return formatted_result
+        
+        counts = Counter(arr)
+        sorted_counts = sorted(counts.items(), key=lambda item: item[1], reverse=True)
+        result = []
+        
+        for i, (enemy, count) in enumerate(sorted_counts):
+            prefix = "and " if i > 0 else ""
+            result.append(f"{prefix}{number_encoding.get(count)} {enemy}s" if count > 1 else f"{prefix}a {enemy}")
+        
+        return result
 
     def allattack_player(self, player):
-
+        
         hitters, missers = [], []
         hitenemies, missenemies = [], []
-        
         totaldamagehit, totaldamagemissed = 0, 0
-
+        
         for enemy in self.contained_enemies:
-            attackvalues = enemy.attack(player, attackmode="dungeon")
             
-            if attackvalues[2] == 1 and self.invincible == 0:  # it returns 1 if there is a hit or 0 if there isn't. if invincible, attack must miss.
+            attackvalues = enemy.attack(player, attackmode="dungeon")
+        
+            if attackvalues[2] == 1 and self.invincible == 0:
                 hitters.append(attackvalues)
+            
             else:
                 missers.append(attackvalues)
-
+        
         for hit in hitters:
-            
             hitenemies.append(hit[0])
             totaldamagehit += hit[1]
-
             player.damage(hit[0], hit[1])
-
+        
         for miss in missers:
-
             missenemies.append(miss[0])
             totaldamagemissed += miss[1]
-
-        hitenemies, missenemies = self.format_enemyarray(hitenemies), self.format_enemyarray(missenemies)
-
-        if hitenemies:
-            # converting hitenemies and missenemies to strings
-            hitenemiesstr = hitenemies[0]
-            for item in hitenemies[1:]: hitenemiesstr += f", {item}"
         
-        missenemiesstr = missenemies[0]
-        for item in missenemies[1:]: missenemiesstr += f", {item}"
+        hitenemies = self.format_enemyarray(hitenemies)
+        missenemies = self.format_enemyarray(missenemies)
+        
+        if missenemies:
+            mstr = ", ".join(missenemies)
+            print(f"You manage to dodge {totaldamagemissed} hit points of damage from {mstr}.")
+        
+        if hitenemies:
+            hstr = ", ".join(hitenemies)
+            print(f"However, you take {totaldamagehit} hit points of damage from {hstr}. You now have {player.health} hit points.")
 
-        print(f"You manage to dodge {totaldamagemissed} hit points worth of damage from {missenemiesstr}.")
-        if totaldamagehit > 0:
-            print(f"""However, you were unable to avoid {totaldamagehit} hit points worth of damage from {hitenemiesstr}.
-
-            You are left with {player.health} hit points after the attack.""")
-
-    def allattack_eachother(self):  # requires PATCHING
-        print("Confused, every enemy in the dungeon attacks another. This is how it goes down.\n\n\n\n\n")
-
+    def allattack_eachother(self):
+        print("Confused, every enemy in the dungeon attacks another.\n")
         sleep(3)
-
-        for enemy in range(len(self.contained_enemies)):
-            
-            if randint(0, 100) < 65: hit = 1
-            else: hit = 0
-
-            cur_enemy = self.contained_enemies[enemy]
-            attacked_enemy = choice(self.contained_enemies)
-
-            dead_enemies = []
-
-            if cur_enemy.identify_type()[0] == "e": ca = "an"
-            else: ca = "a"  # only enraged wizards start with a vowel
-            
-            if attacked_enemy.identify_type()[0] == "e": aa = "an"
-            else: aa = "a"
-
-            attack = cur_enemy.attack(attacked_enemy, "dungeon")  # every enemy attacks a random other enemy
-            
-            possible_dmg = attack[1]
-
-            if hit == 1:
-                attacked_enemy.health -= possible_dmg
-
-                print(f"{ca.upper()} {cur_enemy.identify_type()} attacks {aa} {attacked_enemy.identify_type()} for {possible_dmg} hit points, leaving it on {attacked_enemy.health}")
-
-                if attacked_enemy.health <= 0: 
+        dead = []
+        for cur_enemy in self.contained_enemies:
+            hit = randint(0, 100) < 65
+            targets = [e for e in self.contained_enemies if e != cur_enemy]
+            if not targets:
+                continue
+            attacked_enemy = choice(targets)
+            ca = "an" if cur_enemy.identify_type()[0] in "aeiou" else "a"
+            aa = "an" if attacked_enemy.identify_type()[0] in "aeiou" else "a"
+            attack = cur_enemy.attack(attacked_enemy, "dungeon")
+            dmg = attack[1]
+            if hit:
+                attacked_enemy.health -= dmg
+                print(f"{ca.upper()} {cur_enemy.identify_type()} attacks {aa} {attacked_enemy.identify_type()} for {dmg} damage, leaving it at {attacked_enemy.health}")
+                if attacked_enemy.health <= 0:
                     attacked_enemy.dead()
-                    dead_enemies.append(attacked_enemy)
-
-            if hit == 0:
-                print(f"{ca.upper()} {cur_enemy.identify_type()} misses an attack on {aa} {attacked_enemy.identify_type()} that would've dealt {possible_dmg} damage")
-
-        self.contained_enemies = [x for x in self.contained_enemies if x not in dead_enemies]
+                    dead.append(attacked_enemy)
+            else:
+                print(f"{ca.upper()} {cur_enemy.identify_type()} misses {aa} {attacked_enemy.identify_type()} (would have dealt {dmg} damage)")
+        self.contained_enemies = [e for e in self.contained_enemies if e.health >= 0]
 
     def loot_dungeon(self, player):
-
-        loot = choice(["a potion of healing.", "a potion of healing.", "a potion of healing.", "a potion of healing.", "absolutely nothing.", "a genie with one wish.", "a one-time revive pass.", "a one-time revive pass."])
-        print(f"After defeating all the enemies, you find a chest. You open it grandiosely -- and you are rewarded with {loot}")
-
+        loot = choice(["a potion of healing.", "a potion of healing.", "a potion of healing.", "a potion of healing.",
+                       "absolutely nothing.", "a genie with one wish.", "a one-time revive pass.", "a one-time revive pass."])
+        print(f"After defeating all enemies, you find a chest containing {loot}")
         if loot == "a potion of healing.":
             player.health += 200
-            print("You crack open the healing potion, and you get an increase of 200 to your health! You now have {player.health} hit points")
-
+            print(f"You use the potion and gain 200 hit points, now at {player.health} hit points.\n\n")
         if loot == "a genie with one wish.":
-            input("The genie's voice reverberates through the room. \"What is your wish? (no wishing for more wishes)\"\n\n")
-            print("The genie responds: \"I literally don't care\". He leaves.")
-
+            input("The genie asks: 'What is your wish? (no wishing for more wishes)'\n")
+            print("\n\nYou wait excitedly. The genie speaks confidently.")
+            sleep(1)
+            print("\n\"I don't care.\"\n\n")
         if loot == "a one-time revive pass.":
-            print("On your next death, you will not lose any progress.")
+            print("Your next death won't lose any progress.\n\n")
+
+        sleep(4)
 
 
 class TripleDoorRoom:
@@ -321,7 +294,6 @@ class ShootRoom:  # this is a simple room. you are given the opportunity to shoo
 		
         sleep(2)
 
-        before_time = time()                                                                                        
         decision = input("""But -- BANG, something explodes and you don't know what. Your vision is blurred; you look up and barely make out a tall figure henched over, ready to attack you.
 
                 a) Shoot at it
@@ -330,11 +302,7 @@ class ShootRoom:  # this is a simple room. you are given the opportunity to shoo
 
         while True:
 
-            if time() - before_time > 20:
-
-                print("Due to your inability to make decisions, the creature grabs onto you, ripping you apart while deriding your scream and cries for help")
-
-            elif decision == "a":
+            if decision == "a":
 
                 print("The creature falls, though you are still unable to make out what it is.")
                 enemy.dead_byplayer(player)

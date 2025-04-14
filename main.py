@@ -21,7 +21,7 @@ while True:
 
         for i in range(1,5):
 
-            with open(f"savefile-{i}.txt", "r") as savefile:
+            with open(f"savefiles/savefile-{i}.txt", "r") as savefile:
                 values = savefile.read()
             
             print(f"""Savefile {i}:
@@ -36,7 +36,7 @@ while True:
     else:
         break
     
-savefile = f"savefile-{savedec}.txt"
+savefile = f"savefiles/savefile-{savedec}.txt"
 
 with open(savefile, "r") as save:
     save = save.read()
@@ -97,14 +97,14 @@ def custom_input(prompt=""):
             print(special_commands[user_input])
             continue
         elif user_input in special_commands_func.keys():
-            special_commands[user_input]
+            special_commands_func[user_input]
             continue
         return user_input
 
 b.input = custom_input
 
 def stdmvmt():
-    mvmtdecision = input("""\n\nYou can now move in any direction. You can also see a map of the rooms you've been to.
+    mvmtdecision = input("""\n\nYou can now move in any direction. You can also see a map of the rooms you've been to and what is around you.
 
                          a) Up.
                          b) Down.
@@ -129,8 +129,10 @@ while True:
 
     stdmvmt()
     difficulty = player.level // 2.5
-    room = choice((ShootRoom(difficulty, player),
+    room = choice([ShootRoom(difficulty, player),
                    DungeonRoom(randint(15,25), difficulty, player),
                    DungeonRoom(randint(15,25), difficulty, player),
                    TripleDoorRoom(difficulty, player),
-                   EmptyRoom(player)))
+                   EmptyRoom(player),
+                   EmptyRoom(player),
+                   EmptyRoom(player)])
