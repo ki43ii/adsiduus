@@ -109,30 +109,30 @@ weapons = {"barbarian" : ("short-range knife", "hatchet", "rope", "mace",
            "warrior" : ("hands", "shortsword", "bow and arrow", "katana", "spiked shield",
                         "spinny spiky spoon", "crossbow", "dual-wield katana", "pistol")}
 
-def save(p):
+def save(p, savefile):
     with open(savefile, "w") as savefile:
-        savefile.write("{" + f"level' : {p.level}, 'xp' : {p.xp}, 'playertype' : '{p.playertype}', 'checkpoint' : '{p.cur_room}'" + "}")
+        savefile.write("{" + f"'level' : {p.level}, 'xp' : {p.xp}, 'playertype' : '{p.playertype}', 'checkpoint' : '{p.cur_room}'" + "}")
 
 class Player:
 
-    def __init__(self, playertype, save, savefile):
+    def __init__(self, playertype, save_data, savefile):
 
         print(playertype)
         self.playertype = playertype
         self.savefile = savefile
-        self.save = save
+        self.save = save_data
         self.cur_room = None
-        self.level = save.get("level")
-        self.xp = save.get("xp")
+        self.level = self.save.get("level")
+        self.xp = self.save.get("xp")
         # dividing by 5 to avoid overpowering high level players
         self.attack_strength = stats.get(playertype)[0] * self.level // 2
         self.weak_attack_strength = self.attack_strength // 7
         self.defense = stats.get(playertype)[1] // 2 + stats.get(playertype)[1] * self.level // 5
-        self.health = save.get("health")
+        self.health = self.save.get("health")
         self.hit_chance = 60 + stats.get(playertype)[0] * self.level // 40
         self.special_move = stats.get(playertype)[3]
         self.weapon = weapons.get(playertype)[self.level - 1]  # as levels are 1-indexed
-        save(self)
+        save(self, savefile)
         print(f"Congratulations on beginning your adventure as a {playertype}.")
         print(f"You will begin your journey as a level 1 with your trusty {weapons.get(playertype)[self.level - 1]}.")
         print(f"You are granted an incredible power; your special move is {self.special_move}.")
