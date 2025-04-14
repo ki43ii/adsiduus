@@ -115,15 +115,15 @@ def save(p):
 
 class Player:
 
-    def __init__(self, playertype, save, savefile):
+    def __init__(self, playertype, save_data, savefile):
 
         print(playertype)
         self.playertype = playertype
         self.savefile = savefile
-        self.save = save
+        self.save = save_data
         self.cur_room = None
-        self.level = save.get("level")
-        self.xp = save.get("xp")
+        self.level = self.save.get("level")
+        self.xp = self.save.get("xp")
         # dividing by 5 to avoid overpowering high level players
         self.attack_strength = stats.get(playertype)[0] * self.level // 2
         self.weak_attack_strength = self.attack_strength // 7
