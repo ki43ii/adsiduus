@@ -127,14 +127,43 @@ def stdmvmt():
     while True:
         try:
             mvmtdecision = {"a": "up", "b": "down", "c": "left", "d": "right", "e": "map"}[mvmtdecision]
-            break
+            if mvmtdecision != "map":
+                break
         except KeyError:
             mvmtdecision = input("\nJust use the letter alone. Don't include brackets or anything.\n\n")
 
-    if mvmtdecision == "e":
-        pass
+        if mvmtdecision == "map":
+            print(gamemap)
 
     return mvmtdecision
+
+gamemap = """
++--------    ---------+--------    ---------+--------    ---------+
+|                     |                     |                     |
+|                     |                     |                     |
+                                                                   
+                                                                   
+                                                                   
+|                     |                     |                     |
+|                     |                     |                     |
++--------    ---------+--------    ---------+--------    ---------+
+|                     |                     |                     |
+|                     |                     |                     |
+   
+                                             
+                                                                   
+|                     |                     |                     |
+|                     |                     |                     |
++--------    ---------+--------    ---------+--------    ---------+
+|                     |                     |                     |
+|                     |                     |                     |
+                                                                   
+
+                                                                   
+|                     |                     |                     |
+|                     |                     |                     |
++--------    ---------+--------    ---------+--------    ---------+
+"""
 
 cur_room = save.get("checkpoint")
 
@@ -142,10 +171,11 @@ if cur_room != None:
     print(f"\nYou left off last time in a {save.get('checkpoint')} room.")
 else:
     print("\n\nYou wake up in a completely empty room; all by yourself. Four doors appear at your front, back, left and right. You realise that you'll be stuck here quite a while...")
+    gamemap = overlayer(gamemap, "\033[34mStarting Room\033[0m ", (26, 13))
     cur_room = "start"
     player.save()
 
-
+print(gamemap)
 difficulty = (player.level // 3.5) + 1
 
 rooms = (lambda: ShootRoom(difficulty, player),
