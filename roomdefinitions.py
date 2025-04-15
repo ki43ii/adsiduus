@@ -342,7 +342,7 @@ class EmptyRoom:
         self.q = tuple(self.q_ans.keys())
         self.ans = tuple(self.q_ans.values())
 
-        qnumber = randint(0,len(self.questions))
+        qnumber = randint(0,len(self.q))
 
         print("""You step into an empty room. On the wall, you see a bloody inscription.
 

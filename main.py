@@ -66,11 +66,13 @@ else:
 
 scene = ""
 
-print("""At any time in this playthrough, you can use the following commands.
+print("""At any time in this playthrough, you can use the following commands:-
+
       1) stats -- This prints out your character's current statistics (e.g. their attack_strength, defense, etc.)
       2) scene -- This prints out the current scene using coloured ASCII art.
       3) help -- This will print out this exact string of text you are seeing right now!
-      4) exit/quit -- These will quit out of the game. Don't worry, your progress will be saved to the savefile you chose.\n""")
+      4) credits -- This will tell you the collaborators on this game, and what they've contributed.
+      5) exit/quit -- These will quit out of the game. Don't worry, your progress will be saved to the savefile you chose.\n""")
 
 import builtins as b  # looks wonky but i need to do this
 
@@ -87,7 +89,14 @@ special_commands = {
     1) stats -- This prints out your character's current statistics (e.g. their attack_strength, defense, etc.)
     2) scene -- This prints out the current scene using coloured ASCII art.
     3) help -- This will print out this exact string of text you are seeing right now!
-    4) exit/quit -- These will quit out of the game. Don't worry, your progress will be saved to whatever savefile you chose.\n"""}
+    4) credits -- This will tell you the collaborators on this game, and what they've contributed.
+    5) exit/quit -- These will quit out of the game. Don't worry, your progress will be saved to whatever savefile you chose.\n""",
+    "credits": """
+    All the code        --          Fredrick Wans   8U
+    95% of sprites      --          Hassan Saheb    8K
+    5% of sprites       --          Ahmed Sayed     8E
+    Emotional support   --          Mohamed Khalil  8A\n\n"""}
+    
 
 def custom_input(prompt=""):
     
@@ -130,6 +139,9 @@ if cur_room != None:
     print(f"\nYou left off last time in a {save.get('checkpoint')} room.")
 else:
     print("\n\nYou wake up in a completely empty room; all by yourself. Four doors appear at your front, back, left and right. You realise that you'll be stuck here quite a while...")
+    cur_room = "start"
+    save(player)
+
 
 difficulty = player.level // 2.5
 
