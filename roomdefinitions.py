@@ -197,7 +197,7 @@ class TripleDoorRoom:
     def __init__(self, difficulty, player):  # this should be given as a number 1-2
 
         self.difficulty = difficulty
-        player.cur_room = "three_door"
+        player.cur_room = "triple door"
 
         roomchoice = input("""You stumble into a room with three doors. One door leads to you escaping completely unscathed. The other doors lead to traps; you don't yet know what they are, but you don't want to find out. You enter one of the following options on a piece of paper. Choose wisely.
 

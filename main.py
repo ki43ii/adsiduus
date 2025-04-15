@@ -77,8 +77,8 @@ import builtins as b  # looks wonky but i need to do this
 stdinput = input
 
 special_commands_func = {
-    "exit": exit,
-    "quit": exit}
+    "exit": lambda: exit(),
+    "quit": lambda: exit()}
 
 special_commands = {
     "stats": player.stats,
@@ -111,11 +111,12 @@ def stdmvmt():
                          c) Left.
                          d) Right.
                          e) Map.\n\n""")
+
     while True:
         try:
             mvmtdecision = {"a": "up", "b": "down", "c": "left", "d": "right", "e": "map"}[mvmtdecision]
             break
-        except TypeError:
+        except KeyError:
             mvmtdecision = input("\nJust use the letter alone. Don't include brackets or anything.\n\n")
 
     if mvmtdecision == "e":
@@ -123,16 +124,34 @@ def stdmvmt():
 
     return mvmtdecision
 
-print("\n\nYou wake up in a completely empty room; all by yourself. Four doors appear at your front, back, left and right. You realise that you'll be stuck here quite a while...")
+cur_room = save.get("checkpoint")
+
+if cur_room != None:
+    print(f"\nYou left off last time in a {save.get('checkpoint')} room.")
+else:
+    print("\n\nYou wake up in a completely empty room; all by yourself. Four doors appear at your front, back, left and right. You realise that you'll be stuck here quite a while...")
+
+difficulty = player.level // 2.5
+
+rooms = (lambda: ShootRoom(difficulty, player),
+         lambda: DungeonRoom(randint(15,25), difficulty, player),
+         lambda: DungeonRoom(randint(15,25), difficulty, player),
+         lambda: TripleDoorRoom(difficulty, player),
+         lambda: TripleDoorRoom(difficulty, player),
+         lambda: TripleDoorRoom(difficulty, player),
+         lambda: EmptyRoom(player),
+         lambda: EmptyRoom(player),
+         lambda: EmptyRoom(player))
+
+if cur_room == "dungeon":
+    room = DungeonRoom(randint(15,25), difficulty, player)
+elif cur_room == "triple door":
+    room = TripleDoorRoom(difficulty, player)
+elif cur_room == "shoot":
+    room = ShootRoom(difficulty, player)
+elif cur_room == "empty":
+    room = EmptyRoom(player)
 
 while True:
-
     stdmvmt()
-    difficulty = player.level // 2.5
-    room = choice([ShootRoom(difficulty, player),
-                   DungeonRoom(randint(15,25), difficulty, player),
-                   DungeonRoom(randint(15,25), difficulty, player),
-                   TripleDoorRoom(difficulty, player),
-                   EmptyRoom(player),
-                   EmptyRoom(player),
-                   EmptyRoom(player)])
+    room = choice(rooms)()

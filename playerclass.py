@@ -157,11 +157,11 @@ class Player:
             self.xp -= 50
             self.level += 1
 
-            self.attack_strength = stats.get(playertype)[0] * self.level // 5
-            self.defense = stats.get(playertype)[1] // 2 + stats.get(playertype)[1] * self.level // 5
-            self.health = stats.get(playertype)[2] // 2 + stats.get(playertype)[2] * self.level // 5
+            self.attack_strength = stats.get(self.playertype)[0] * self.level // 5
+            self.defense = stats.get(self.playertype)[1] // 2 + stats.get(playertype)[1] * self.level // 5
+            self.health = stats.get(self.playertype)[2] // 2 + stats.get(playertype)[2] * self.level // 5
 
-            self.weapon = weapons.get(playertype)[self.level - 1]  # as levels are 1-indexed
+            self.weapon = weapons.get(self.playertype)[self.level - 1]  # as levels are 1-indexed
             print(f"""Congratulations! You have leveled up. You are now level {self.level}. Your weapon has also been upgraded to a {self.weapon}.
                   You now deal a little bit more damage to enemies, and you can defend more attacks.
 

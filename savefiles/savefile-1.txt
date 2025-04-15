@@ -1,1 +1,1 @@
-{'level' : 1, 'xp' : 30.0, 'playertype' : 'barbarian', 'checkpoint' : 'None'}
+{'level' : 1, 'xp' : 13, 'playertype' : 'tank', 'checkpoint' : 'triple door'}
