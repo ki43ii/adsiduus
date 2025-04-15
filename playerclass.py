@@ -54,6 +54,9 @@ class Enemy:
         
         return f"{relative_power} {enemytypes.get(round(stats_mean, -1))}"  # Rounded to tens place, put into dict at top.
 
+    def damage(self, attacker, dmg):  # attacker parameter unnecessary
+        self.health -= dmg
+
     def attack(self, target, attackmode = None):
 
         possible_damage = self.attack_strength * 50 // target.defense # roughly 50 is average defense stat

@@ -146,7 +146,7 @@ else:
     player.save()
 
 
-difficulty = player.level // 2.5
+difficulty = (player.level // 3.5) + 1
 
 rooms = (lambda: ShootRoom(difficulty, player),
          lambda: DungeonRoom(randint(15,25), difficulty, player),

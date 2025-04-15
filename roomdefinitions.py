@@ -271,7 +271,7 @@ class TripleDoorRoom:
         print("You see the light in front of you. You see that you have escaped.")
         sleep(1)
 
-        player.health -= difficulty * 50
+        player.damage("", difficulty * 50)
         print(f"As you exit, you feel a sharp pain in your foot. You have stepped on a pressure plate, and you are splashed by one of the Glitch's dark potions. You lose {difficulty * 50} health, leaving you with {player.health} hit points.")
         
         sleep(1)
