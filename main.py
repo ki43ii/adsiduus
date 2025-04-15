@@ -106,7 +106,7 @@ def custom_input(prompt=""):
             print(special_commands[user_input])
             continue
         elif user_input in special_commands_func.keys():
-            special_commands_func[user_input]
+            special_commands_func[user_input]()
             continue
         return user_input
 
