@@ -111,7 +111,7 @@ weapons = {"barbarian" : ("short-range knife", "hatchet", "rope", "mace",
 
 def save(p, savefile):
     with open(savefile, "w") as savefile:
-        savefile.write("{" + f"'level' : {p.level}, 'xp' : {p.xp}, 'playertype' : '{p.playertype}', 'checkpoint' : '{p.cur_room}'" + "}")
+        savefile.write("{" + f"'level' : {p.level}, 'xp' : {p.xp}, 'playertype' : '{p.playertype}', 'health' : {p.health}, 'checkpoint' : '{p.cur_room}'" + "}")
 
 class Player:
 
@@ -120,20 +120,22 @@ class Player:
         print(playertype)
         self.playertype = playertype
         self.savefile = savefile
-        self.save = save_data
+        self.saveinfo = save_data
         self.cur_room = None
-        self.level = self.save.get("level")
-        self.xp = self.save.get("xp")
+        self.level = self.saveinfo.get("level")
+        self.xp = self.saveinfo.get("xp")
         # dividing by 5 to avoid overpowering high level players
         self.attack_strength = stats.get(playertype)[0] * self.level // 2
         self.weak_attack_strength = self.attack_strength // 7
         self.defense = stats.get(playertype)[1] // 2 + stats.get(playertype)[1] * self.level // 5
-        if self.save.get("health") == None: self.health = stats.get(playertype)[2] // 2 + stats.get(playertype)[2] * self.level // 5
-        else: self.health = self.save.get("health")
+        if self.saveinfo.get("health") == None: self.health = stats.get(playertype)[2] // 2 + stats.get(playertype)[2] * self.level // 5
+        else: self.health = self.saveinfo.get("health")
         self.hit_chance = 60 + stats.get(playertype)[0] * self.level // 40
         self.special_move = stats.get(playertype)[3]
         self.weapon = weapons.get(playertype)[self.level - 1]  # as levels are 1-indexed
-        save(self, savefile)
+        
+        self.save()
+        
         print(f"Congratulations on beginning your adventure as a {playertype}.")
         print(f"You will begin your journey as a level 1 with your trusty {weapons.get(playertype)[self.level - 1]}.")
         print(f"You are granted an incredible power; your special move is {self.special_move}.")
@@ -166,11 +168,14 @@ class Player:
                   You now deal a little bit more damage to enemies, and you can defend more attacks.
 
                   Remember, at any time, typing stats will give a list of your stats.\n\n""")
-            save(self, self.savefile)
+            self.save()
 
-    def damage(self, attacker, dealt_damage):
+    def damage(self, attacker, dealt_damage):  # note that the attacker parameter is not used
 
         self.health -= dealt_damage
+        self.save()
+
+    def save(self):
         save(self, self.savefile)
 
     def attack(self, target, attack_strength=None):
@@ -188,8 +193,6 @@ class Player:
         
         if target.health <= 0:
             target.dead_byplayer(self)
-
-    
 
     def dead(self):
 

@@ -17,6 +17,7 @@ class DungeonRoom:
         self.invincible = 0
         self.move_used = 0
         player.cur_room = "dungeon"
+        player.save()
 
         for _ in range(enemycount):
             self.contained_enemies.append(Enemy(10))
@@ -198,6 +199,7 @@ class TripleDoorRoom:
 
         self.difficulty = difficulty
         player.cur_room = "triple door"
+        player.save()
 
         roomchoice = input("""You stumble into a room with three doors. One door leads to you escaping completely unscathed. The other doors lead to traps; you don't yet know what they are, but you don't want to find out. You enter one of the following options on a piece of paper. Choose wisely.
 
@@ -287,7 +289,8 @@ class ShootRoom:  # this is a simple room. you are given the opportunity to shoo
 
     def __init__(self, difficulty, player):  # difficulty is 1, 2 or 3
 
-        player.cur_room = "shoot_room"
+        player.cur_room = "shoot"
+        player.save()
         enemy = Enemy(difficulty)
 
         print("You find yourself face to face with a broken yellow door and a gun on the floor. You try to look through but its completely dark, you look down and see what seems to be a rolled up letter, you bend over to pick it up...")
@@ -338,24 +341,27 @@ class EmptyRoom:
 
     def __init__(self, player):
 
-        self.q_ans = {}
+        player.cur_room = "empty"
+        player.save()
+
+        self.q_ans = {"What is 1 + 1?" : "2"}
         self.q = tuple(self.q_ans.keys())
         self.ans = tuple(self.q_ans.values())
 
-        qnumber = randint(0,len(self.q))
+        qnumber = randint(0,len(self.q) - 1)
 
         print("""You step into an empty room. On the wall, you see a bloody inscription.
 
-        \033[1;31m Would you like to play a game?
+        \033[1;31mWould you like to play a game?
 
-        The writing morphs.""")
+        \033[0;37mThe writing morphs.""")
 
         sleep(3)
 
         before_ans_time = time()
         answer = input(f"""\033[1;31m{self.q[qnumber]}
 
-        You have 45 seconds.\n\n\n\n)""")
+        You have 45 seconds.\n\n\n\n\033[0;37m""")
         
         while True:
             
@@ -364,13 +370,20 @@ class EmptyRoom:
             if after_ans_time - before_ans_time >= 45:
                 print("""It morphs again. 
 
-        \033[1;31mToo late.                
+    \033[1;31mToo late.
 
-Suddenly, you feel a horrible pain in your foot.
+\033[0;37mSuddenly, you feel a horrible pain in your foot.
 
 You take 50 damage.\n""")
-                player.damage(50)
+                player.damage("the literal wall", 50)
         
             elif answer != self.ans[qnumber]:
 
-                answer = input("That isn't quite right. Make sure your input is spelt correctly if you forgot.\n\n")  # to be completed
+                answer = input("""That isn't quite right. Make sure your input is spelt correctly, or that you're expressing it with digits, not with numbers in word form (e.g. say '1', not 'one').
+                
+                Hurry up. The wall is not patient.\n\n""")
+
+            else:
+                break
+
+        print("You survived this time. Lucky you.")
