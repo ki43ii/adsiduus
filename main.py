@@ -96,12 +96,10 @@ special_commands = {
     6) save -- This will manually save your progress (including what room you're in, your health, your level, etc.). Don't worry though, the game will auto-save every time you take damage, go to a new room, etc..\n""",
     "credits": """
     All the code        --          Fredrick Wans   8U
-    95% of sprites      --          Hassan Saheb    8K
-    5% of sprites       --          Ahmed Sayed     8E
-    Emotional support   --          Mohamed Khalil  8A\n\n"""}
-    
+    All the sprites      --          Hassan Saheb    8K\n\n"""}
+ 
 
-def custom_input(prompt=""):
+def custom_input(prompt=""):  # so that scene works
     
     while True:
         user_input = stdinput(prompt).strip().lower()
