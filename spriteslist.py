@@ -1,12 +1,12 @@
-from sprites import *
-
-sprites = {
-""
-}
+from sprites import image_to_ascii
 import os
-print("sprites = {")
+
+sprites = {}
+
 for filename in os.listdir("allsprites"):
     filepath = os.path.join("allsprites", filename)
     if os.path.isfile(filepath):
-        print(filename + ":\n" + image_to_ascii(filepath) + ",")
-print("}")
+        key = os.path.splitext(filename)[0]
+        sprites[key] = image_to_ascii(filepath)
+
+print(sprites["barbarian"])

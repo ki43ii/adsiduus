@@ -2,6 +2,7 @@ from playerclass import *
 from roomdefinitions import *
 from random import *
 from sprites import *
+from spriteslist import sprites
 from ast import literal_eval
 from sys import exit
 
@@ -113,6 +114,8 @@ def custom_input(prompt=""):  # so that scene works
 
 b.input = custom_input
 
+gamemap = sprites.get("map")
+
 def stdmvmt():
     mvmtdecision = input("""\n\nYou can now move in any direction. You can also see a map of the rooms you've been to and what is around you.
 
@@ -201,6 +204,8 @@ def render_minimap(gamemap, maparr, pos):
 
     return minimap_canvas
 
+pos = [5, 5]
+
 while True:
 
     mvmt_dir = stdmvmt()
@@ -213,7 +218,7 @@ while True:
     elif mvmt_dir == "d":
         pos[1] += 1
     else:
-        print(render_minimap())
+        print(render_minimap(gamemap, maparr, pos))
 
     roomchoice = randint(0,8)
     
