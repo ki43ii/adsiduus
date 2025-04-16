@@ -187,6 +187,7 @@ rooms = (lambda: ShootRoom(difficulty, player),
          lambda: EmptyRoom(player),
          lambda: EmptyRoom(player),
          lambda: EmptyRoom(player))
+formatted_rooms = ("Shoot Room", "Dungeon Room", "Dungeon Room", "Three Doors", "Three Doors", "Three Doors", "Empty Room", "Empty Room", "Empty Room")
 
 if cur_room == "dungeon":
     room = DungeonRoom(randint(15,25), difficulty, player)
@@ -198,5 +199,18 @@ elif cur_room == "empty":
     room = EmptyRoom(player)
 
 while True:
-    stdmvmt()
-    room = choice(rooms)()
+
+    mvmt_dir = stdmvmt()
+    if mvmt_dir == “up”:
+	    pos[0] -= 1
+    elif mvmt_dir == “down”:
+	    pos[0] += 1
+    elif mvmt_dir == “left”:
+	    pos[1] -= 1
+    elif mvmt_dir == “right”:
+        pos[1] += 1
+
+    roomchoice = randint(0,8)
+    
+    maparr[pos[0], pos[1]] = formatted_rooms[roomchoice]
+        room = rooms[roomchoice]()
