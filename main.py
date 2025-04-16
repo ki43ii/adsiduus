@@ -124,46 +124,18 @@ def stdmvmt():
                          d) Right.
                          e) Map.\n\n""")
 
+
     while True:
-        try:
-            mvmtdecision = {"a": "up", "b": "down", "c": "left", "d": "right", "e": "map"}[mvmtdecision]
-            if mvmtdecision != "map":
-                break
-        except KeyError:
-            mvmtdecision = input("\nJust use the letter alone. Don't include brackets or anything.\n\n")
-
-        if mvmtdecision == "map":
-            print(gamemap)
-
+        if mvmtdecision in ("a", "b", "c", "d", "e"):
+            break
+        else:
+            mvmtdecision = input("\nJust use the letter alone. Don't include brackets or anything.\n\n\n")
     return mvmtdecision
 
-gamemap = """
-+--------    ---------+--------    ---------+--------    ---------+
-|                     |                     |                     |
-|                     |                     |                     |
-                                                                   
-                                                                   
-                                                                   
-|                     |                     |                     |
-|                     |                     |                     |
-+--------    ---------+--------    ---------+--------    ---------+
-|                     |                     |                     |
-|                     |                     |                     |
-   
-                                             
-                                                                   
-|                     |                     |                     |
-|                     |                     |                     |
-+--------    ---------+--------    ---------+--------    ---------+
-|                     |                     |                     |
-|                     |                     |                     |
-                                                                   
+maparr = []
 
-                                                                   
-|                     |                     |                     |
-|                     |                     |                     |
-+--------    ---------+--------    ---------+--------    ---------+
-"""
+for _ in range(11):
+    maparr.append([0,0,0,0,0,0,0,0,0,0,0])
 
 cur_room = save.get("checkpoint")
 
@@ -171,11 +143,9 @@ if cur_room != None:
     print(f"\nYou left off last time in a {save.get('checkpoint')} room.")
 else:
     print("\n\nYou wake up in a completely empty room; all by yourself. Four doors appear at your front, back, left and right. You realise that you'll be stuck here quite a while...")
-    gamemap = overlayer(gamemap, "\033[34mStarting Room\033[0m ", (26, 13))
     cur_room = "start"
     player.save()
 
-print(gamemap)
 difficulty = (player.level // 3.5) + 1
 
 rooms = (lambda: ShootRoom(difficulty, player),
@@ -198,19 +168,56 @@ elif cur_room == "shoot":
 elif cur_room == "empty":
     room = EmptyRoom(player)
 
+def render_minimap(gamemap, maparr, pos):
+    ROOM_WIDTH = 33
+    ROOM_HEIGHT = 22
+    GRID_SIZE = len(maparr)
+
+    # Create a blank canvas the same size as gamemap (or copy it)
+    minimap_canvas = "\n".join([" " * 99 for _ in range(66)])
+
+    py, px = pos  # player y and x
+
+    for dy in range(-1, 2):  # -1, 0, 1
+        for dx in range(-1, 2):
+            ny, nx = py + dy, px + dx
+
+            if 0 <= ny < GRID_SIZE and 0 <= nx < GRID_SIZE:
+                cell = maparr[ny][nx]
+
+                if cell == 0:
+                    label = "???"
+                elif ny == py and nx == px:
+                    label = "[YOU]"
+                else:
+                    label = cell
+
+                # Center label in room block
+                room_art = generate_room_block(label)
+
+                # Calculate top-left corner for this cell in the ascii canvas
+                canvas_x = (dx + 1) * ROOM_WIDTH  # shift -1..1 → 0..2
+                canvas_y = (dy + 1) * ROOM_HEIGHT
+
+                minimap_canvas = overlayer(minimap_canvas, room_art, box=(canvas_x, canvas_y))
+
+    return minimap_canvas
+
 while True:
 
     mvmt_dir = stdmvmt()
-    if mvmt_dir == “up”:
+    if mvmt_dir == "a":
 	    pos[0] -= 1
-    elif mvmt_dir == “down”:
+    elif mvmt_dir == "b":
 	    pos[0] += 1
-    elif mvmt_dir == “left”:
+    elif mvmt_dir == "c":
 	    pos[1] -= 1
-    elif mvmt_dir == “right”:
+    elif mvmt_dir == "d":
         pos[1] += 1
+    else:
+        print(render_minimap())
 
     roomchoice = randint(0,8)
     
-    maparr[pos[0], pos[1]] = formatted_rooms[roomchoice]
-        room = rooms[roomchoice]()
+    maparr[pos[0]][pos[1]] = formatted_rooms[roomchoice]
+    room = rooms[roomchoice]()

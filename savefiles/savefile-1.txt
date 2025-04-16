@@ -1,1 +1,1 @@
-{'level' : 1, 'xp' : 0, 'health' : 200, 'playertype' : 'TBD', 'health' : 200, 'checkpoint' : None}
+{'level' : 1, 'xp' : 0, 'playertype' : 'barbarian', 'health' : 200, 'checkpoint' : 'None'}
