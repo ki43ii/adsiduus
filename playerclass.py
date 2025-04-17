@@ -114,13 +114,14 @@ weapons = {"barbarian" : ("short-range knife", "hatchet", "rope", "mace",
 
 def save(p, savefile):
     with open(savefile, "w") as savefile:
-        savefile.write("{" + f"'level' : {p.level}, 'xp' : {p.xp}, 'playertype' : '{p.playertype}', 'health' : {p.health}, 'checkpoint' : '{p.cur_room}'" + "}")
+        savefile.write("{" + f"'level' : {p.level}, 'xp' : {p.xp}, 'playertype' : '{p.playertype}', 'health' : {p.health}, 'checkpoint' : '{p.cur_room}', 'maparr' : {p.maparr}" + "}")
 
 class Player:
 
-    def __init__(self, playertype, save_data, savefile):
+    def __init__(self, playertype, save_data, savefile, maparr):
 
         print(playertype)
+        self.maparr = maparr
         self.playertype = playertype
         self.savefile = savefile
         self.saveinfo = save_data
@@ -155,6 +156,10 @@ class Player:
 
             Level:                  {self.level}
             Experience:             {self.xp}\n"""
+
+    def update_map(self, maparr):
+        self.maparr = maparr
+        self.save()
 
     def levelup(self):
 

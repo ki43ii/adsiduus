@@ -57,15 +57,26 @@ if save.get("playertype") == "TBD":
 
     while True:
         if playertype in ("a", "b", "c", "d"):
-            player = Player({"a": "barbarian", "b": "tank", "c": "healer", "d": "warrior"}.get(playertype), save, savefile)
+            player = Player({"a": "barbarian", "b": "tank", "c": "healer", "d": "warrior"}.get(playertype), save, savefile, save.get("maparr"))
             break
         else:
             playertype = input("\nHe tells you to just use the letter alone. Don't include brackets or anything.\n\n")
 
 else:
-    player = Player(save.get("playertype"), save, savefile)
+    player = Player(save.get("playertype"), save, savefile, save.get("maparr"))
 
 scene = ""
+def printmap():
+    def accurate_naming(thing):
+        if thing == 0:
+            return "undiscovered room"
+        else:
+            return thing
+
+    print(f"Above you there is a {accurate_naming(player.maparr[pos[0] - 1][pos[1]])}")
+    print(f"Below you there is a {accurate_naming(player.maparr[pos[0] + 1][pos[1]])}")
+    print(f"To your right there is a {accurate_naming(player.maparr[pos[0]][pos[1] + 1])}")
+    print(f"To your left there is a {accurate_naming(player.maparr[pos[0]][pos[1] - 1])}")
 
 print("""At any time in this playthrough, you can use the following commands:-
 
@@ -84,7 +95,7 @@ stdinput = input
 special_commands_func = {
         "exit": lambda: exit(),
         "quit": lambda: exit(),
-        "save": lambda: player.save()
+        "save": lambda: player.save(),
         "map": lambda: printmap()}
 
 special_commands = {
@@ -183,3 +194,4 @@ while True:
     
     maparr[pos[0]][pos[1]] = formatted_rooms[roomchoice]
     room = rooms[roomchoice]()
+    player.update_map(maparr)
