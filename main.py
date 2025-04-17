@@ -80,11 +80,9 @@ import builtins as b  # looks wonky but i need to do this
 stdinput = input
 
 def scenemaker():
-    
-    for enemy in room.contained_enemies: enemysprites.append(sprites.get(enemy.identify_type()))
-    print(create_scene(sprites[formatted_room], enemysprites, sprites[player.playerclass], sprites[player.weapon]))
-    
-
+    enemysprites = []
+    for enemy in player.cur_room_class.contained_enemies: enemysprites.append(sprites[" ".join(enemy.identify_type().split(sep=" ")[1:])])
+    print(create_scene(sprites[save.get("checkpoint")], enemysprites, sprites[player.playertype], sprites[player.weapon]))
 
 special_commands_func = {
         "exit": lambda: exit(),
@@ -103,7 +101,8 @@ special_commands = {
     6) save -- This will manually save your progress (including what room you're in, your health, your level, etc.). Don't worry though, the game will auto-save every time you take damage, go to a new room, etc..\n""",
     "credits": """
     All the code        --          Fredrick Wans   8U
-    All the sprites     --          Hassan Saheb    8K\n\n"""}
+    All the sprites     --          Hassan Saheb    8K
+    Emotional support   --          Ahmed Sayed     8N  (also was in charge of pissing off Fredrick, (me))\n\n"""}
 
 
 def custom_input(prompt=""):  # so that scene works
@@ -175,5 +174,4 @@ while True:
     roomchoice = randint(0,8)
     formatted_room = formatted_rooms[roomchoice]
     room = rooms[roomchoice]()
-    enemysprites = []
     player.save()

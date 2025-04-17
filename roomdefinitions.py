@@ -11,7 +11,7 @@ class DungeonRoom:
     def __init__(self, enemycount, difficulty, player):
 
         print(f"You find yourself in a dungeon room, trapped with {enemycount} angry enemies.")
-        
+        player.cur_room_class = self
         self.contained_enemies = []
         self.enemycount = enemycount
         self.invincible = 0
@@ -77,7 +77,7 @@ class DungeonRoom:
                             dead_enemies.append(enemy)
                     
                     self.contained_enemies = [x for x in self.contained_enemies if x not in dead_enemies]
-                    player.xp += 20
+                    player.xp += 5
 
                     if self.contained_enemies:
                         print(f"Only a {self.contained_enemies[0].identify_type()} escapes. It runs away from the dungeon.\n")
@@ -102,7 +102,7 @@ class DungeonRoom:
                     print("However...")
                     self.allattack_eachother()
             
-            player.xp += 20
+            player.xp += 5
 
         self.loot_dungeon(player)
 
@@ -200,6 +200,8 @@ class TripleDoorRoom:
 
     def __init__(self, difficulty, player):  # this should be given as a number 1-2
 
+        self.contained_enemies = []
+        player.cur_room_class = self
         self.difficulty = difficulty
         player.cur_room = "triple door"
         player.save()
@@ -266,7 +268,7 @@ class TripleDoorRoom:
 
             if enemy.health <= 0:
                 enemy.dead_byplayer(player)
-                player.xp += 10
+                player.xp += 3
                 break
 
     def fakefreedom(self, difficulty, player):
@@ -277,7 +279,7 @@ class TripleDoorRoom:
         player.damage("", difficulty * 50)
         print(f"As you exit, you feel a sharp pain in your foot. You have stepped on a pressure plate, and you are splashed by one of the Glitch's dark potions. You lose {difficulty * 50} health, leaving you with {player.health} hit points.")
         
-        player.xp += 10
+        player.xp += 3
         sleep(1)
         print("However, you do escape otherwise safe. You may now continue your journey.")
 
@@ -287,7 +289,7 @@ class TripleDoorRoom:
 
         sleep(1)
 
-        player.xp += 10
+        player.xp += 3
         print("You leave the room completely unscathed. You were lucky this time.")
 
 class ShootRoom:  # this is a simple room. you are given the opportunity to shoot your enemy, or just do a normal attack. (or die)
@@ -296,7 +298,7 @@ class ShootRoom:  # this is a simple room. you are given the opportunity to shoo
 
         player.cur_room = "shoot"
         player.save()
-
+        player.cur_room_class = self
         enemy = Enemy(difficulty)
 
         self.contained_enemies = [enemy]
@@ -317,7 +319,7 @@ class ShootRoom:  # this is a simple room. you are given the opportunity to shoo
 
                 print("The creature falls, though you are still unable to make out what it is.")
                 enemy.dead_byplayer(player)
-                player.xp += 3
+                player.xp += 1
                 break
 
             elif decision == "b":
@@ -350,10 +352,10 @@ class EmptyRoom:
 
     def __init__(self, player):
 
+        player.cur_room_class = self
         player.cur_room = "empty"
         player.save()
         self.contained_enemies = []
-
         self.q_ans = {"What is 1 + 1?" : "2"}
         self.q = tuple(self.q_ans.keys())
         self.ans = tuple(self.q_ans.values())
@@ -372,7 +374,7 @@ class EmptyRoom:
         answer = input(f"""\033[1;31m{self.q[qnumber]}
 
         You have 45 seconds.\n\n\n\n\033[0;37m""")
-        player.xp += 10
+        player.xp += 3
         while True:
             
             after_ans_time = time()

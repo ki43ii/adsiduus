@@ -124,6 +124,7 @@ class Player:
         self.savefile = savefile
         self.saveinfo = save_data
         self.cur_room = None
+        self.cur_room_class = None
         self.level = self.saveinfo.get("level")
         self.xp = self.saveinfo.get("xp")
         # dividing by 5 to avoid overpowering high level players
