@@ -121,7 +121,7 @@ def custom_input(prompt=""):  # so that scene works
 b.input = custom_input
 
 def stdmvmt():
-    mvmtdecision = input("""\n\nYou can now move in any direction. You can also see a map of the rooms you've been to and what is around you.
+    mvmtdecision = input("""\n\nYou can now move in any direction.
 
                          a) Up.
                          b) Down.
