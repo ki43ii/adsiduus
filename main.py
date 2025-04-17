@@ -82,7 +82,7 @@ stdinput = input
 def scenemaker():
     enemysprites = []
     for enemy in player.cur_room_class.contained_enemies: enemysprites.append(sprites[" ".join(enemy.identify_type().split(sep=" ")[1:])])
-    print(create_scene(sprites[save.get("checkpoint")], enemysprites, sprites[player.playertype], sprites[player.weapon]))
+    print(create_scene(sprites[player.cur_room], enemysprites, sprites[player.playertype], sprites[player.weapon]))
 
 special_commands_func = {
         "exit": lambda: exit(),
