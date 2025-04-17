@@ -74,7 +74,8 @@ print("""At any time in this playthrough, you can use the following commands:-
       3) help -- This will print out this exact string of text you are seeing right now!
       4) credits -- This will tell you the collaborators on this game, and what they've contributed.
       5) exit/quit -- These will quit out of the game. Don't worry, your progress will be saved to the savefile you chose.
-      6) save -- This will manually save your progress (including what room you're in, your health, your level, etc.). Don't worry though, the game will auto-save every time you take damage, go to a new room, etc..\n""")
+      6) map -- Will tell you the room above you, below you, to your left and to your right.
+      7) save -- This will manually save your progress (including what room you're in, your health, your level, etc.). Don't worry though, the game will auto-save every time you take damage, go to a new room, etc..\n""")
 
 import builtins as b  # looks wonky but i need to do this
 
@@ -94,7 +95,8 @@ special_commands = {
     3) help -- This will print out this exact string of text you are seeing right now!
     4) credits -- This will tell you the collaborators on this game, and what they've contributed.
     5) exit/quit -- These will quit out of the game. Don't worry, your progress will be saved to whatever savefile you chose.
-    6) save -- This will manually save your progress (including what room you're in, your health, your level, etc.). Don't worry though, the game will auto-save every time you take damage, go to a new room, etc..\n""",
+    6) map -- Will tell you the room above you, below you, to your left and to your right.
+    7) save -- This will manually save your progress (including what room you're in, your health, your level, etc.). Don't worry though, the game will auto-save every time you take damage, go to a new room, etc..\n""",
     "credits": """
     All the code        --          Fredrick Wans   8U
     All the sprites      --          Hassan Saheb    8K\n\n"""}
@@ -114,29 +116,21 @@ def custom_input(prompt=""):  # so that scene works
 
 b.input = custom_input
 
-gamemap = sprites.get("map")
-
 def stdmvmt():
     mvmtdecision = input("""\n\nYou can now move in any direction. You can also see a map of the rooms you've been to and what is around you.
 
                          a) Up.
                          b) Down.
                          c) Left.
-                         d) Right.
-                         e) Map.\n\n""")
+                         d) Right.""")
 
 
     while True:
-        if mvmtdecision in ("a", "b", "c", "d", "e"):
+        if mvmtdecision in ("a", "b", "c", "d"):
             break
         else:
             mvmtdecision = input("\nJust use the letter alone. Don't include brackets or anything.\n\n\n")
     return mvmtdecision
-
-maparr = []
-
-for _ in range(11):
-    maparr.append([0,0,0,0,0,0,0,0,0,0,0])
 
 cur_room = save.get("checkpoint")
 
@@ -169,41 +163,6 @@ elif cur_room == "shoot":
 elif cur_room == "empty":
     room = EmptyRoom(player)
 
-def render_minimap(gamemap, maparr, pos):
-    ROOM_WIDTH = 33
-    ROOM_HEIGHT = 22
-    GRID_SIZE = len(maparr)
-
-    # Create a blank canvas the same size as gamemap (or copy it)
-    minimap_canvas = "\n".join([" " * 99 for _ in range(66)])
-
-    py, px = pos  # player y and x
-
-    for dy in range(-1, 2):  # -1, 0, 1
-        for dx in range(-1, 2):
-            ny, nx = py + dy, px + dx
-
-            if 0 <= ny < GRID_SIZE and 0 <= nx < GRID_SIZE:
-                cell = maparr[ny][nx]
-
-                if cell == 0:
-                    label = "???"
-                elif ny == py and nx == px:
-                    label = "[YOU]"
-                else:
-                    label = cell
-
-                # Center label in room block
-                room_art = generate_room_block(label)
-
-                # Calculate top-left corner for this cell in the ascii canvas
-                canvas_x = (dx + 1) * ROOM_WIDTH  # shift -1..1 → 0..2
-                canvas_y = (dy + 1) * ROOM_HEIGHT
-
-                minimap_canvas = overlayer(minimap_canvas, room_art, box=(canvas_x, canvas_y))
-
-    return minimap_canvas
-
 pos = [5, 5]
 
 while True:
@@ -217,8 +176,6 @@ while True:
 	    pos[1] -= 1
     elif mvmt_dir == "d":
         pos[1] += 1
-    else:
-        print(render_minimap(gamemap, maparr, pos))
 
     roomchoice = randint(0,8)
     
