@@ -114,7 +114,7 @@ weapons = {"barbarian" : ("short-range knife", "hatchet", "rope", "mace",
 
 def save(p, savefile):
     with open(savefile, "w") as savefile:
-        savefile.write("{" + f"'level' : {p.level}, 'xp' : {p.xp}, 'playertype' : '{p.playertype}', 'health' : {p.health}, 'checkpoint' : '{p.cur_room}', 'maparr' : {p.maparr}, 'pos' : {p.pos}" + "}")
+        savefile.write("{" + f"'level' : {p.level}, 'xp' : {p.xp}, 'playertype' : '{p.playertype}', 'health' : {p.health}, 'checkpoint' : '{p.cur_room}'" + "}")
 
 class Player:
 

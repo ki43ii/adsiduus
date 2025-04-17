@@ -1,8 +1,7 @@
 from playerclass import *
 from roomdefinitions import *
 from random import *
-from sprites import *
-from spriteslist import sprites
+from spriteslist import *
 from ast import literal_eval
 from sys import exit
 
@@ -107,11 +106,11 @@ special_commands_func = {
         "exit": lambda: exit(),
         "quit": lambda: exit(),
         "save": lambda: player.save(),
-        "map": lambda: printmap()}
+        "map": lambda: printmap(),
+        "scene": lambda: create_scene()}
 
 special_commands = {
         "stats": player.stats,
-        "scene": scene,
         "help": """At any time in this playthrough, you can use the following commands.
     1) stats -- This prints out your character's current statistics (e.g. their attack_strength, defense, etc.)
     2) scene -- This prints out the current scene using coloured ASCII art.
@@ -121,7 +120,7 @@ special_commands = {
     6) save -- This will manually save your progress (including what room you're in, your health, your level, etc.). Don't worry though, the game will auto-save every time you take damage, go to a new room, etc..\n""",
     "credits": """
     All the code        --          Fredrick Wans   8U
-    All the sprites      --          Hassan Saheb    8K\n\n"""}
+    All the sprites     --          Hassan Saheb    8K\n\n"""}
 
 
 def custom_input(prompt=""):  # so that scene works
@@ -188,3 +187,4 @@ while True:
 
     stdmvmt()
     room = choice(rooms)()
+    player.save()

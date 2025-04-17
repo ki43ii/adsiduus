@@ -1,4 +1,4 @@
-from sprites import image_to_ascii
+from sprites import *
 import os
 
 sprites = {}

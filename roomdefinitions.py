@@ -263,6 +263,7 @@ class TripleDoorRoom:
 
             if enemy.health <= 0:
                 enemy.dead_byplayer(player)
+                player.xp += 3
                 break
 
 
@@ -309,6 +310,7 @@ class ShootRoom:  # this is a simple room. you are given the opportunity to shoo
 
                 print("The creature falls, though you are still unable to make out what it is.")
                 enemy.dead_byplayer(player)
+                player.xp += 3
                 break
 
             elif decision == "b":
@@ -376,7 +378,8 @@ class EmptyRoom:
 
 You take 50 damage.\n""")
                 player.damage("the literal wall", 50)
-        
+                break
+
             elif answer != self.ans[qnumber]:
 
                 answer = input("""That isn't quite right. Make sure your input is spelt correctly, or that you're expressing it with digits, not with numbers in word form (e.g. say '1', not 'one').
