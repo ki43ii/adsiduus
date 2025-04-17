@@ -82,14 +82,15 @@ import builtins as b  # looks wonky but i need to do this
 stdinput = input
 
 special_commands_func = {
-    "exit": lambda: exit(),
-    "quit": lambda: exit(),
-    "save": lambda: player.save()}
+        "exit": lambda: exit(),
+        "quit": lambda: exit(),
+        "save": lambda: player.save()
+        "map": lambda: printmap()}
 
 special_commands = {
-    "stats": player.stats,
-    "scene": scene,
-    "help": """At any time in this playthrough, you can use the following commands.
+        "stats": player.stats,
+        "scene": scene,
+        "help": """At any time in this playthrough, you can use the following commands.
     1) stats -- This prints out your character's current statistics (e.g. their attack_strength, defense, etc.)
     2) scene -- This prints out the current scene using coloured ASCII art.
     3) help -- This will print out this exact string of text you are seeing right now!
@@ -100,10 +101,10 @@ special_commands = {
     "credits": """
     All the code        --          Fredrick Wans   8U
     All the sprites      --          Hassan Saheb    8K\n\n"""}
- 
+
 
 def custom_input(prompt=""):  # so that scene works
-    
+
     while True:
         user_input = stdinput(prompt).strip().lower()
         if user_input in special_commands.keys():
@@ -152,6 +153,7 @@ rooms = (lambda: ShootRoom(difficulty, player),
          lambda: EmptyRoom(player),
          lambda: EmptyRoom(player),
          lambda: EmptyRoom(player))
+
 formatted_rooms = ("Shoot Room", "Dungeon Room", "Dungeon Room", "Three Doors", "Three Doors", "Three Doors", "Empty Room", "Empty Room", "Empty Room")
 
 if cur_room == "dungeon":
