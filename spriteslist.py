@@ -8,5 +8,3 @@ for filename in os.listdir("allsprites"):
     if os.path.isfile(filepath):
         key = os.path.splitext(filename)[0]
         sprites[key] = image_to_ascii(filepath)
-
-print(sprites["barbarian"])

@@ -70,7 +70,9 @@ if not save.get("maparr"):
     pos = [5, 5]
     player.update_map(maparr)
 else:
-    player.update_map(save.get(maparr))
+    maparr = save.get("maparr")
+    player.update_map(save.get("maparr"))
+    pos = save.get("maparr")
 
 scene = ""
 
@@ -81,10 +83,12 @@ def printmap():
         else:
             return thing
 
-    print(f"Above you there is a {accurate_naming(player.maparr[pos[0] - 1][pos[1]])}")
-    print(f"Below you there is a {accurate_naming(player.maparr[pos[0] + 1][pos[1]])}")
-    print(f"To your right there is a {accurate_naming(player.maparr[pos[0]][pos[1] + 1])}")
+    print(f"Above you there is a {accurate_naming(maparr[pos[0] - 1][pos[1]])}")
+    print(f"Below you there is a {accurate_naming(maparr[pos[0] + 1][pos[1]])}")
+    print(f"To your right there is a {accurate_naming(maparr[pos[0]][pos[1] + 1])}")
     print(f"To your left there is a {accurate_naming(player.maparr[pos[0]][pos[1] - 1])}")
+
+    print(maparr)
 
 print("""At any time in this playthrough, you can use the following commands:-
 
@@ -93,8 +97,7 @@ print("""At any time in this playthrough, you can use the following commands:-
       3) help -- This will print out this exact string of text you are seeing right now!
       4) credits -- This will tell you the collaborators on this game, and what they've contributed.
       5) exit/quit -- These will quit out of the game. Don't worry, your progress will be saved to the savefile you chose.
-      6) map -- Will tell you the room above you, below you, to your left and to your right.
-      7) save -- This will manually save your progress (including what room you're in, your health, your level, etc.). Don't worry though, the game will auto-save every time you take damage, go to a new room, etc..\n""")
+      6) save -- This will manually save your progress (including what room you're in, your health, your level, etc.). Don't worry though, the game will auto-save every time you take damage, go to a new room, etc..\n""")
 
 import builtins as b  # looks wonky but i need to do this
 
@@ -115,8 +118,7 @@ special_commands = {
     3) help -- This will print out this exact string of text you are seeing right now!
     4) credits -- This will tell you the collaborators on this game, and what they've contributed.
     5) exit/quit -- These will quit out of the game. Don't worry, your progress will be saved to whatever savefile you chose.
-    6) map -- Will tell you the room above you, below you, to your left and to your right.
-    7) save -- This will manually save your progress (including what room you're in, your health, your level, etc.). Don't worry though, the game will auto-save every time you take damage, go to a new room, etc..\n""",
+    6) save -- This will manually save your progress (including what room you're in, your health, your level, etc.). Don't worry though, the game will auto-save every time you take damage, go to a new room, etc..\n""",
     "credits": """
     All the code        --          Fredrick Wans   8U
     All the sprites      --          Hassan Saheb    8K\n\n"""}
@@ -142,7 +144,7 @@ def stdmvmt():
                          a) Up.
                          b) Down.
                          c) Left.
-                         d) Right.""")
+                         d) Right.\n\n\n""")
 
 
     while True:
@@ -173,8 +175,6 @@ rooms = (lambda: ShootRoom(difficulty, player),
          lambda: EmptyRoom(player),
          lambda: EmptyRoom(player))
 
-formatted_rooms = ("Shoot Room", "Dungeon Room", "Dungeon Room", "Three Doors", "Three Doors", "Three Doors", "Empty Room", "Empty Room", "Empty Room")
-
 if cur_room == "dungeon":
     room = DungeonRoom(randint(15,25), difficulty, player)
 elif cur_room == "triple door":
@@ -184,22 +184,7 @@ elif cur_room == "shoot":
 elif cur_room == "empty":
     room = EmptyRoom(player)
 
-pos = [5, 5]
-
 while True:
 
-    mvmt_dir = stdmvmt()
-    if mvmt_dir == "a":
-	    pos[0] -= 1
-    elif mvmt_dir == "b":
-	    pos[0] += 1
-    elif mvmt_dir == "c":
-	    pos[1] -= 1
-    elif mvmt_dir == "d":
-        pos[1] += 1
-
-    roomchoice = randint(0,8)
-    
-    maparr[pos[0]][pos[1]] = formatted_rooms[roomchoice]
-    room = rooms[roomchoice]()
-    player.update_map(maparr)
+    stdmvmt()
+    room = choice(rooms)()

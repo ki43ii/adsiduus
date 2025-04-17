@@ -74,18 +74,20 @@ def overlayer(img1, img2, box):
 
     return '\n'.join(''.join(row) for row in canvas)
 
-sprites = {"barbarian" : None}  # to be completed
-
 def create_scene(bg, enemies: list, player, weapon):
     
     enemy_shuffled = shuffle(enemies)
     scene = bg
-    box = None  # will figure out later
     for enemy in enemies:
-        scene = overlayer(scene, enemy, box)
 
-    scene = overlayer(scene, player)
-    scene = overlayer(scene, weapon)
+        xpos = 70
+        while xpos >= 30:
+            scene = overlayer(scene, enemy, [xpos, 20])
+            xpos -= 6
+            continue
+
+    scene = overlayer(scene, player, [5, 25])
+    scene = overlayer(scene, weapon, [10, 35])
 
     return scene
 
