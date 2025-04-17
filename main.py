@@ -1,7 +1,7 @@
 from playerclass import *
 from roomdefinitions import *
 from random import *
-from spriteslist import *
+from sprites import *
 from ast import literal_eval
 from sys import exit
 
@@ -56,38 +56,15 @@ if save.get("playertype") == "TBD":
 
     while True:
         if playertype in ("a", "b", "c", "d"):
-            player = Player({"a": "barbarian", "b": "tank", "c": "healer", "d": "warrior"}.get(playertype), save, savefile, save.get("maparr"))
+            player = Player({"a": "barbarian", "b": "tank", "c": "healer", "d": "warrior"}.get(playertype), save, savefile)
             break
         else:
             playertype = input("\nHe tells you to just use the letter alone. Don't include brackets or anything.\n\n")
 
 else:
-    player = Player(save.get("playertype"), save, savefile, save.get("maparr"))
-
-if not save.get("maparr"):
-    maparr = [[0,0,0,0,0,0,0,0,0,0,0]] * 11
-    pos = [5, 5]
-    player.update_map(maparr)
-else:
-    maparr = save.get("maparr")
-    player.update_map(save.get("maparr"))
-    pos = save.get("maparr")
+    player = Player(save.get("playertype"), save, savefile)
 
 scene = ""
-
-def printmap():
-    def accurate_naming(thing):
-        if thing == 0:
-            return "undiscovered room"
-        else:
-            return thing
-
-    print(f"Above you there is a {accurate_naming(maparr[pos[0] - 1][pos[1]])}")
-    print(f"Below you there is a {accurate_naming(maparr[pos[0] + 1][pos[1]])}")
-    print(f"To your right there is a {accurate_naming(maparr[pos[0]][pos[1] + 1])}")
-    print(f"To your left there is a {accurate_naming(player.maparr[pos[0]][pos[1] - 1])}")
-
-    print(maparr)
 
 print("""At any time in this playthrough, you can use the following commands:-
 
@@ -102,12 +79,18 @@ import builtins as b  # looks wonky but i need to do this
 
 stdinput = input
 
+def scenemaker():
+    
+    for enemy in room.contained_enemies: enemysprites.append(sprites.get(enemy.identify_type()))
+    print(create_scene(sprites[formatted_room], enemysprites, sprites[player.playerclass], sprites[player.weapon]))
+    
+
+
 special_commands_func = {
         "exit": lambda: exit(),
         "quit": lambda: exit(),
         "save": lambda: player.save(),
-        "map": lambda: printmap(),
-        "scene": lambda: create_scene()}
+        "scene": lambda: scenemaker()}
 
 special_commands = {
         "stats": player.stats,
@@ -125,6 +108,7 @@ special_commands = {
 
 def custom_input(prompt=""):  # so that scene works
 
+    prompt = "\033[0m" + prompt
     while True:
         user_input = stdinput(prompt).strip().lower()
         if user_input in special_commands.keys():
@@ -173,6 +157,8 @@ rooms = (lambda: ShootRoom(difficulty, player),
          lambda: EmptyRoom(player),
          lambda: EmptyRoom(player),
          lambda: EmptyRoom(player))
+formatted_rooms = ("shoot", "dungeon", "dungeon", "triple door", "triple door", "triple door", "empty", "empty", "empty")
+
 
 if cur_room == "dungeon":
     room = DungeonRoom(randint(15,25), difficulty, player)
@@ -186,5 +172,8 @@ elif cur_room == "empty":
 while True:
 
     stdmvmt()
-    room = choice(rooms)()
+    roomchoice = randint(0,8)
+    formatted_room = formatted_rooms[roomchoice]
+    room = rooms[roomchoice]()
+    enemysprites = []
     player.save()

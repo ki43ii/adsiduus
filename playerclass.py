@@ -118,11 +118,8 @@ def save(p, savefile):
 
 class Player:
 
-    def __init__(self, playertype, save_data, savefile, maparr):
+    def __init__(self, playertype, save_data, savefile):
 
-        print(playertype)
-        self.maparr = maparr
-        self.pos = save_data.get("pos")
         self.playertype = playertype
         self.savefile = savefile
         self.saveinfo = save_data
@@ -138,7 +135,7 @@ class Player:
         self.hit_chance = 60 + stats.get(playertype)[0] * self.level // 40
         self.special_move = stats.get(playertype)[3]
         self.weapon = weapons.get(playertype)[self.level - 1]  # as levels are 1-indexed
-        
+        self.finalboss = 0
         self.save()
         
         print(f"Congratulations on beginning your adventure as a {playertype}.")
@@ -158,26 +155,25 @@ class Player:
             Level:                  {self.level}
             Experience:             {self.xp}\n"""
 
-    def update_map(self, maparr):
-        self.maparr = maparr
-        self.save()
-
     def levelup(self):
 
-        if self.xp >= 50:
-            self.xp -= 50
-            self.level += 1
+        if self.level <= 9:
+            if self.xp >= 50:
+                self.xp -= 50
+                self.level += 1
 
-            self.attack_strength = stats.get(self.playertype)[0] * self.level // 5
-            self.defense = stats.get(self.playertype)[1] // 2 + stats.get(playertype)[1] * self.level // 5
-            self.health = stats.get(self.playertype)[2] // 2 + stats.get(playertype)[2] * self.level // 5
+                self.attack_strength = stats.get(self.playertype)[0] * self.level // 5
+                self.defense = stats.get(self.playertype)[1] // 2 + stats.get(self.playertype)[1] * self.level // 5
+                self.health = stats.get(self.playertype)[2] // 2 + stats.get(self.playertype)[2] * self.level // 5
 
-            self.weapon = weapons.get(self.playertype)[self.level - 1]  # as levels are 1-indexed
-            print(f"""Congratulations! You have leveled up. You are now level {self.level}. Your weapon has also been upgraded to a {self.weapon}.
+                self.weapon = weapons.get(self.playertype)[self.level - 1]  # as levels are 1-indexed
+                print(f"""Congratulations! You have leveled up. You are now level {self.level}. Your weapon has also been upgraded to a {self.weapon}.
                   You now deal a little bit more damage to enemies, and you can defend more attacks.
 
                   Remember, at any time, typing stats will give a list of your stats.\n\n""")
-            self.save()
+                self.save()
+        else:
+            self.finalboss = 1
 
     def damage(self, attacker, dealt_damage):  # note that the attacker parameter is not used
 
@@ -188,7 +184,7 @@ class Player:
         save(self, self.savefile)
 
     def attack(self, target, attack_strength=None):
-        
+       
         if attack_strength == None: attack_strength = self.attack_strength  # no idea why i had to do this. python is dumb.
 
         possible_damage = attack_strength * 50 // target.defense # roughly 50 is average defense stat
@@ -212,4 +208,11 @@ class Player:
 
         print("""Through your foggy eyes, you see a dark wizard. You hear the terrible voice say to you:
 
-        """)
+        \033[31;1;0mYou lose...\033[0m""")
+
+        sleep(3)
+        print("Lucky for you, you have the revive pass.\n\n")
+
+        print("You will start off again with 250 health.\n\n")
+
+        self.health = 250

@@ -77,7 +77,8 @@ class DungeonRoom:
                             dead_enemies.append(enemy)
                     
                     self.contained_enemies = [x for x in self.contained_enemies if x not in dead_enemies]
-                    
+                    player.xp += 20
+
                     if self.contained_enemies:
                         print(f"Only a {self.contained_enemies[0].identify_type()} escapes. It runs away from the dungeon.\n")
                         self.contained_enemies.pop(0)
@@ -100,7 +101,9 @@ class DungeonRoom:
                 else:
                     print("However...")
                     self.allattack_eachother()
-        
+            
+            player.xp += 20
+
         self.loot_dungeon(player)
 
     def format_enemyarray(self, arr):
@@ -223,12 +226,12 @@ class TripleDoorRoom:
         elif self.choice == 2:
             self.fakefreedom(difficulty, player)
         else:
-            self.freedom()
+            self.freedom(player)
 
     def strongenemy(self, difficulty, player):
 
         enemy = Enemy(difficulty)
-
+        self.contained_enemies = [enemy]
         print(f"You find yourself stuck in a room. Your only companion? A -- clearly furious -- {enemy.identify_type()}.")
 
         while True:
@@ -263,9 +266,8 @@ class TripleDoorRoom:
 
             if enemy.health <= 0:
                 enemy.dead_byplayer(player)
-                player.xp += 3
+                player.xp += 10
                 break
-
 
     def fakefreedom(self, difficulty, player):
 
@@ -275,15 +277,17 @@ class TripleDoorRoom:
         player.damage("", difficulty * 50)
         print(f"As you exit, you feel a sharp pain in your foot. You have stepped on a pressure plate, and you are splashed by one of the Glitch's dark potions. You lose {difficulty * 50} health, leaving you with {player.health} hit points.")
         
+        player.xp += 10
         sleep(1)
         print("However, you do escape otherwise safe. You may now continue your journey.")
 
-    def freedom(self):
+    def freedom(self, player):
 
         print("You see the light in front of you. You see that you have escaped.")
 
         sleep(1)
 
+        player.xp += 10
         print("You leave the room completely unscathed. You were lucky this time.")
 
 class ShootRoom:  # this is a simple room. you are given the opportunity to shoot your enemy, or just do a normal attack. (or die)
@@ -292,7 +296,10 @@ class ShootRoom:  # this is a simple room. you are given the opportunity to shoo
 
         player.cur_room = "shoot"
         player.save()
+
         enemy = Enemy(difficulty)
+
+        self.contained_enemies = [enemy]
 
         print("You find yourself face to face with a broken yellow door and a gun on the floor. You try to look through but its completely dark, you look down and see what seems to be a rolled up letter, you bend over to pick it up...")
 		
@@ -345,6 +352,7 @@ class EmptyRoom:
 
         player.cur_room = "empty"
         player.save()
+        self.contained_enemies = []
 
         self.q_ans = {"What is 1 + 1?" : "2"}
         self.q = tuple(self.q_ans.keys())
@@ -364,7 +372,7 @@ class EmptyRoom:
         answer = input(f"""\033[1;31m{self.q[qnumber]}
 
         You have 45 seconds.\n\n\n\n\033[0;37m""")
-        
+        player.xp += 10
         while True:
             
             after_ans_time = time()
