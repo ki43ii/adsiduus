@@ -1,0 +1,23 @@
+1:
+  Install Python, pip, GCC and a C library
+  Windows:
+    `https://www.python.org/downloads/`
+    `https://sourceforge.net/projects/mingw/`
+  Linux:
+    (C library should be prereadily installed) Install via your package manager,
+    `sudo apt install gcc python pip`
+    `sudo dnf install gcc python3 python3-pip`
+    `sudo xbps-install gcc python3 python3-pip`
+    `sudo pacman -S gcc python3 python3-pip`                       (pip package might be broken on arch-based and gentoo-based distros)
+    `sudo emerge -a sys-devel/gcc dev-lang/python dev-python/pip`  (pip package might be broken on arch-based and gentoo-based distros)
+    
+2:
+  Compile the C file into `finalboss` with
+    `gcc finalboss.c -o finalboss`
+    
+3:
+  Run main.py with
+    `python main.py`
+    or
+    `python3 main.py`
+  and enjoy :)
