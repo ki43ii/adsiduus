@@ -179,6 +179,18 @@ class Player:
     def damage(self, attacker, dealt_damage):  # note that the attacker parameter is not used
 
         self.health -= dealt_damage
+        self.stats = f"""Here are your player's stats:
+
+            Attack strength:        {self.attack_strength}
+            Sweep attack strength:  {self.weak_attack_strength}  (Used during wide attacks)
+            Defense:                {self.defense}
+            Health:                 {self.health}
+            Hit chance:             {self.hit_chance}
+            Special move:           {self.special_move}
+            Weapon:                 {self.weapon}
+
+            Level:                  {self.level}
+            Experience:             {self.xp}\n"""
         self.save()
 
     def save(self):
