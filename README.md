@@ -1,4 +1,4 @@
-cool hackathon game
+cool hackathon [full] game XD
 
 <pre>
 @@@
@@ -28,4 +28,3 @@ cool hackathon game
              @---------------------------------------@            
             @-----------------------------------------@ 
 </pre>
-rip, hackathon ending soon ;(
