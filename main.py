@@ -65,7 +65,15 @@ if save.get("playertype") == "TBD":
 else:
     player = Player(save.get("playertype"), save, savefile, save.get("maparr"))
 
+if not save.get("maparr"):
+    maparr = [[0,0,0,0,0,0,0,0,0,0,0]] * 11
+    pos = [5, 5]
+    player.update_map(maparr)
+else:
+    player.update_map(save.get(maparr))
+
 scene = ""
+
 def printmap():
     def accurate_naming(thing):
         if thing == 0:
